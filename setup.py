@@ -12,5 +12,19 @@ setup(
     url='http://packages.python.org/foox',
     packages=['foox'],
     scripts=['bin/foox'],
-    license='MIT'
+    license='MIT',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Education',
+        'Intended Audience :: Other Audience',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Artistic Software',
+        'Topic :: Education',
+        'Topic :: Internet',
+        'Topic :: Multimedia :: Sound/Audio :: MIDI',
+        'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    ]
 )
