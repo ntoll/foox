@@ -1,9 +1,10 @@
 """
 Tests for the ga (genetic algorithm) module
 """
-from foox.ga import genetic_algorithm
 import unittest
+import random
 from mock import MagicMock
+from foox.ga import genetic_algorithm, rouletteWheelSelection
 
 class TestGeneticAlgorithm(unittest.TestCase):
     """
@@ -21,8 +22,8 @@ class TestGeneticAlgorithm(unittest.TestCase):
 
     def test_fitness_called_for_starting_population(self):
         """
-        Ensures the fitness function is called before yielding the starting
-        population.
+        Ensures the fitness function is called on each initial genome before
+        yielding the starting population.
         """
         start_pop = [1, 2, 3]
         mock_fitness = MagicMock(return_value=None)
@@ -138,3 +139,32 @@ class TestGeneticAlgorithm(unittest.TestCase):
         expected = [[3+i, 2+i, 1+i] for i in range(10)]
         self.assertEqual(actual, expected,
             "Actual: %r Expected: %r" % (actual, expected))
+
+
+class TestRouletteWheelSelection(unittest.TestCase):
+    """
+    As much as is possible, ensures the roulette wheel selection function works
+    in the expected fashion.
+    """
+
+    def setUp(self):
+        # To make the results repeatable and predictable.
+        random.seed(1)
+
+    def test_returns_genome(self):
+        """
+        Ensures that the roulette wheel returns a selected genome.
+        """
+
+        class Genome(object):
+            """
+            A simple representation of a genome.
+            """
+
+            def __init__(self, fitness):
+                self.fitness = fitness
+
+        population = [Genome(random.uniform(0.1, 10.0)) for i in range(4)]
+        result = rouletteWheelSelection(population)
+        self.assertIsInstance(result, Genome,
+            "Expected result of rouletteWheelSelection is not a Genome")
