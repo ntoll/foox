@@ -3,8 +3,9 @@ Tests for the ga (genetic algorithm) module
 """
 import unittest
 import random
-from mock import MagicMock
-from foox.ga import genetic_algorithm, rouletteWheelSelection
+from mock import MagicMock, patch
+from foox.ga import (genetic_algorithm, rouletteWheelSelection, crossover,
+    Genome)
 
 class TestGeneticAlgorithm(unittest.TestCase):
     """
@@ -168,3 +169,126 @@ class TestRouletteWheelSelection(unittest.TestCase):
         result = rouletteWheelSelection(population)
         self.assertIsInstance(result, Genome,
             "Expected result of rouletteWheelSelection is not a Genome")
+
+
+class TestCrossover(unittest.TestCase):
+    """
+    Ensures the crossover function used to "breed" two new offspring from two
+    given parents works as expected.
+    """
+
+    def setUp(self):
+        # To make the results repeatable and predictable.
+        random.seed(9)
+
+    def test_return_parents_if_same(self):
+        """
+        If both parents have the same chromosome then just return the parents.
+        """
+        mum = Genome([1, 2, 3])
+        dad = Genome([1, 2, 3])
+        result = crossover(mum, dad, Genome)
+        self.assertEqual(mum, result[0],
+            "Child expected to be the same as parent.")
+        self.assertEqual(mum, result[0],
+            "Child expected to be the same as parent.")
+
+    def test_creates_two_babies(self):
+        """
+        If the parents are different ensures that the children are the result
+        of an expected crossover.
+        """
+        mum = Genome([1, 2, 3, 4])
+        dad = Genome(['a', 'b', 'c', 'd'])
+        result = crossover(mum, dad, Genome)
+        # There must be two children.
+        self.assertEqual(2, len(result))
+        # The randint call in crossover will choose 2 given random.seed(5).
+        expected1 = Genome([1, 2, 'c', 'd'])
+        expected2 = Genome(['a', 'b', 3, 4])
+        self.assertEqual(expected1, result[0],
+            "Expected: %r Got: %r" % (expected1, result[0]))
+        self.assertEqual(expected2, result[1],
+            "Expected: %r Got: %r" % (expected2, result[1]))
+
+
+class TestGenome(unittest.TestCase):
+    """
+    Ensures the base Genome class behaves as expected.
+    """
+
+    def setUp(self):
+        # To make the results repeatable and predictable.
+        random.seed(9)
+
+    def test_init(self):
+        """
+        Ensures the chromosome and _fitness are set.
+        """
+        x = Genome([1, 2, 3])
+        self.assertEqual(None, x._fitness)
+        self.assertEqual([1, 2, 3], x.chromosome)
+
+    def test_fitness(self):
+        """
+        Ensures the fitness method returns NotImplemented.
+        """
+        x = Genome([1, 2, 3])
+        self.assertEqual(NotImplemented, x.fitness())
+
+    def test_breed(self):
+        """
+        Ensures that the crossover function is called as a result of calling
+        the breed method.
+        """
+        x = Genome([1, 2, 3, 4])
+        mate = Genome(['a', 'b', 'c', 'd'])
+        mock_crossover = MagicMock(return_value=(Genome([1, 2, 'a', 'b']),
+            Genome(['a', 'b', 3, 4])))
+
+        with patch('foox.ga.crossover', mock_crossover):
+            x.breed(mate)
+        self.assertEqual(1, mock_crossover.call_count,
+            "Breed does not call crossover function expected number of times.")
+        mock_crossover.assert_called_with(x, mate, Genome)
+
+    def test_mutate(self):
+        """
+        Ensurs the mutate method returns NotImplemented.
+        """
+        x = Genome([1, 2, 3])
+        self.assertEqual(NotImplemented, x.mutate(1, 2))
+
+    def test_eq(self):
+        """
+        Ensures that only the chromosome is used for equality.
+        """
+        x = Genome([1, 2, 3])
+        y = Genome([1, 2, 3])
+        z = Genome([3, 2, 1])
+        self.assertEqual(x, y)
+        self.assertNotEqual(x, z)
+
+    def test_len(self):
+        """
+        The __len__ function returns the length of the chromosome.
+        """
+        x = Genome([1, 2, 3])
+        self.assertEqual(3, len(x))
+
+    def test_getitem(self):
+        """
+        The __getitem__ function returns the corresponding result from the
+        chromosome.
+        """
+        x = Genome([1, 2, 3])
+        self.assertEqual(1, x[0])
+        self.assertEqual(2, x[1])
+        self.assertEqual(3, x[2])
+
+    def test_repr(self):
+        """
+        The __repr__ of the Genome is that of the chromosome.
+        """
+        x = Genome([1, 2, 3])
+        self.assertEqual(repr([1, 2, 3]), repr(x))
