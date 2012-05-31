@@ -61,9 +61,9 @@ def crossover(mum, dad, klass):
     and then swaps the ends of each genome's chromosome to create two new
     genomes that are returned in a tuple.
     """
-    # Check if the parents are the same
+    # Check if the parents are the same,
     if mum == dad:
-        # And do nothing if they are.
+        # and do nothing if they are.
         return (mum, dad)
 
     crossover_point = random.randint(0, len(mum))
