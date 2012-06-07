@@ -8,7 +8,7 @@ number of notes and their durations from the number of notes in the cantus
 firmus.
 """
 import datetime
-from jinja2 import Template
+from string import Template
 
 SPECIES_DURATION = {
     1: 1,
@@ -20,9 +20,9 @@ TEMPLATE = """
 \\version "2.14.2"
 
 \header {
-    title = "{{ title }}"
-    subtitle = "Created on: {{ created_on }}"
-    composer = "{{ composer }} and Foox"
+    title = "$title"
+    subtitle = "Created on: $created_on"
+    composer = "$composer and Foox"
 }
 
 result = {
@@ -32,7 +32,7 @@ result = {
         \\time 4/4
         \clef treble
         {
-            {{ contrapunctus }}
+            $contrapunctus
         }
     }
     \\new Staff
@@ -40,7 +40,7 @@ result = {
         \\time 4/4
         \clef treble
         {
-            {{ cantus_firmus }}
+            $cantus_firmus
         }
     }
     >>
@@ -165,6 +165,6 @@ def render(species, cantus_firmus, contrapunctus, title='Untitled',
     # Sanity check...
     if context['contrapunctus'] and context['cantus_firmus']:
         score = Template(TEMPLATE)
-        return score.render(context)
+        return score.substitute(context)
     else:
         return ''

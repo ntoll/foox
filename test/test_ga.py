@@ -4,7 +4,7 @@ Tests for the ga (genetic algorithm) module
 import unittest
 import random
 from mock import MagicMock, patch
-from foox.ga import (genetic_algorithm, rouletteWheelSelection, crossover,
+from foox.ga import (genetic_algorithm, roulette_wheel_selection, crossover,
     Genome)
 
 class TestGeneticAlgorithm(unittest.TestCase):
@@ -166,9 +166,9 @@ class TestRouletteWheelSelection(unittest.TestCase):
                 self.fitness = fitness
 
         population = [Genome(random.uniform(0.1, 10.0)) for i in range(4)]
-        result = rouletteWheelSelection(population)
+        result = roulette_wheel_selection(population)
         self.assertIsInstance(result, Genome,
-            "Expected result of rouletteWheelSelection is not a Genome")
+            "Expected result of roulette_wheel_selection is not a Genome")
 
 
 class TestCrossover(unittest.TestCase):
@@ -223,18 +223,11 @@ class TestGenome(unittest.TestCase):
 
     def test_init(self):
         """
-        Ensures the chromosome and _fitness are set.
+        Ensures the chromosome and fitness are initialised correctly.
         """
         x = Genome([1, 2, 3])
-        self.assertEqual(None, x._fitness)
+        self.assertEqual(None, x.fitness)
         self.assertEqual([1, 2, 3], x.chromosome)
-
-    def test_fitness(self):
-        """
-        Ensures the fitness method returns NotImplemented.
-        """
-        x = Genome([1, 2, 3])
-        self.assertEqual(NotImplemented, x.fitness())
 
     def test_breed(self):
         """
@@ -257,7 +250,7 @@ class TestGenome(unittest.TestCase):
         Ensurs the mutate method returns NotImplemented.
         """
         x = Genome([1, 2, 3])
-        self.assertEqual(NotImplemented, x.mutate(1, 2))
+        self.assertEqual(NotImplemented, x.mutate(1, 2, [1, 2, 3]))
 
     def test_eq(self):
         """

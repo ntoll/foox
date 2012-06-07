@@ -32,13 +32,13 @@ def genetic_algorithm(population, fitness, generate, halt):
         yield current_population
 
 
-def rouletteWheelSelection(population):
+def roulette_wheel_selection(population):
     """
     A random number between 0 and the total fitness score of all the genomes in
     a population is chosen (a point with a slice of a roulette wheel). The code
-    iterates through the genomes adding up the fitness scores. When the subtotal
-    is greater than the randomly chosen point it returns the genome at that
-    point "on the wheel".
+    iterates through the genomes adding up the fitness scores. When the
+    subtotal is greater than the randomly chosen point it returns the genome
+    at that point "on the wheel".
 
     See: https://en.wikipedia.org/wiki/Fitness_proportionate_selection
     """
@@ -91,14 +91,7 @@ class Genome(object):
         itself is called a genome (hence the name of this class).
         """
         self.chromosome = chromosome
-        self._fitness = None # Denotes unknown.
-
-    def fitness(self):
-        """
-        Returns the fitness score for this genome. Should be implemented in the
-        child classes and perhaps use self._fitness for memoization purposes.
-        """
-        return NotImplemented
+        self.fitness = None # Denotes unknown. Set by the fitness function.
 
     def breed(self, other):
         """
@@ -107,11 +100,11 @@ class Genome(object):
         """
         return crossover(self, other, self.__class__)
 
-    def mutate(self, mutation_range, mutation_rate):
+    def mutate(self, mutation_range, mutation_rate, context):
         """
         Mutates the genotypes no more than the mutation_range depending on the
-        mutation_rate. To be overridden as per requirements in the child
-        classes.
+        mutation_rate given a certain context (to ensure the mutation is valid).
+        To be overridden as per requirements in the child classes.
         """
         return NotImplemented
 
