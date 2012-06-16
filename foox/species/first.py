@@ -48,8 +48,10 @@ def make_fitness_function(cantus_firmus):
         the cantus_firmus in this closure. Caches the fitness score in the
         genome.
         """
+        """
         if genome.fitness != None:
             return genome.fitness
+        """
 
         # The fitness score to be returned.
         fitness_score = 0.0
@@ -136,19 +138,19 @@ def make_fitness_function(cantus_firmus):
 
         # Punish too many (> 1/3) repeated notes.
         if repeats > one_third:
-            fitness_score -= 0.1 * repeats
+            fitness_score -= 0.1
 
         # Punish too many (> 1/3) parallel thirds
         if thirds > one_third:
-            fitness_score -= 0.1 * thirds
+            fitness_score -= 0.1
 
         # Punish too many (> 1/3) parallel sixths.
         if sixths > one_third:
-            fitness_score -= 0.1 * sixths
+            fitness_score -= 0.1
 
         # Punish too many (> 1/3) parallel movements.
         if parallel_motion > one_third:
-            fitness_score -= 0.1 * parallel_motion
+            fitness_score -= 0.1
 
         genome.fitness = fitness_score
 
@@ -199,7 +201,7 @@ def halt(population, generation_count):
     """
     # All four required fingerprints exist in a solution that has not been
     # punished by for over-use of thirds, sixths, parallel motion etc.
-    return population[0].fitness >= 4
+    return population[0].fitness >= 4 or generation_count > 100
 
 
 class Genome(ga.Genome):

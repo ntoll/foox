@@ -10,7 +10,7 @@ setup(
     author='Nicholas H.Tollervey',
     author_email='ntoll@ntoll.org',
     url='http://packages.python.org/foox',
-    packages=['foox'],
+    packages=['foox', 'foox/species'],
     scripts=['bin/foox'],
     license='MIT',
     classifiers=[

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Foox - Music Theory, Genetic Algorithms & Python</title>
+        <meta name="description" content=""/>
+        <meta name="author" content="Nicholas H.Tollervey"/>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent" />
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+        <link rel="stylesheet" href="lib/zenburn.css">
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="state-background"></div>
+            <div class="slides">
+                <section>
+                    <h1>Foox<h1>
+                    <h3 class="inverted">
+                        Music Theory, Genetic Algorithms & Python
+                    </h3>
+                    <script>
+                        if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) ) document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
+                    </script>
+                </section>
+            </div>
+            <aside class="controls">
+                <a class="left" href="#">&#x25C4;</a>
+                <a class="right" href="#">&#x25BA;</a>
+                <a class="up" href="#">&#x25B2;</a>
+                <a class="down" href="#">&#x25BC;</a>
+            </aside>
+
+            <div class="progress"><span></span></div>
+        </div>
+        <!-- Optional libraries for code syntax highlighting and classList support in IE9 -->
+        <script src="lib/highlight.js"></script>
+        <script src="lib/classList.js"></script>
+
+        <script src="js/reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                // Display controls in the bottom right corner
+                controls: true,
+
+                // Display a presentation progress bar
+                progress: true,
+
+                // If true; each slide will be pushed to the browser history
+                history: true,
+
+                // Loops the presentation, defaults to false
+                loop: false,
+
+                // Flags if mouse wheel navigation should be enabled
+                mouseWheel: false,
+
+                // Apply a 3D roll to links on hover
+                rollingLinks: false,
+
+                // UI style
+                theme: 'default',
+
+                // Transition style
+                transition: 'default'
+            });
+            hljs.initHighlightingOnLoad();
+        </script>
+    </body>
+</html>
