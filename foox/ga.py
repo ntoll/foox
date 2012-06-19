@@ -11,16 +11,17 @@ def genetic_algorithm(population, fitness, generate, halt):
     algorithm.
 
     @param population: the starting population of genomes.
-    @param fitness: a function which given a genome will return a fitness score.
-    @param generate: an iterator that encapsulates producing offspring genomes
-    for the next generation.
+    @param fitness: a function which given a genome will return a fitness
+    score.
+    @param generate: an generator that produces offspring genomes for the next
+    generation.
     @param halt: a function to test if the genetic algorithm should stop.
 
     Applies the fitness function to each genome in a generation, uses the
-    select function to choose genomes for crossover (offspring) and mutation.
-    These become the next generation.
+    generate function create the next generation from the existing one.
 
-    If the halt function returns True for a generation then the algorithm stops.
+    If the halt function returns True for a generation then the algorithm
+    stops.
     """
     current_population = sorted(population, key=fitness, reverse=True)
     generation_count = 1
