@@ -170,6 +170,25 @@ class TestRouletteWheelSelection(unittest.TestCase):
         self.assertIsInstance(result, Genome,
             "Expected result of roulette_wheel_selection is not a Genome")
 
+    def test_returns_genome_with_unfit_population(self):
+        """
+        Ensures that the roulette wheel returns a randomly selected genome if
+        none of them have a positive fitness score.
+        """
+
+        class Genome(object):
+            """
+            A simple representation of a genome.
+            """
+
+            def __init__(self, fitness):
+                self.fitness = fitness
+
+        population = [Genome(0.0) for i in range(4)]
+        result = roulette_wheel_selection(population)
+        self.assertIsInstance(result, Genome,
+            "Expected result of roulette_wheel_selection is not a Genome")
+
 
 class TestCrossover(unittest.TestCase):
     """

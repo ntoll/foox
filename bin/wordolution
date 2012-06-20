@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+"""
+A simple command line wrapper around the genetic algorithm used for evolving
+target words. For demonstration / educational use only (i.e. it has no useful
+purpose).
+"""
+
+import argparse
+import logging
+
+from foox import ga, version, words
+
+
+parser = argparse.ArgumentParser(
+    description='Evolves words to demonstrate how genetic algorithms work.')
+parser.add_argument('--version', action='version',
+    version=version.get_version())
+parser.add_argument('-v', '--verbose', help='increased amount of verbosity.',
+    action='store_true')
+parser.add_argument('-w', '--word', help='The word to attempt to evolve.',
+    required=True, type=str)
+parser.add_argument('-p', '--population', help='The population size to use.',
+    required=False, type=int)
+
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    word = args.word.lower()
+    size = 10
+    if args.population:
+        size = args.population
+    start_population = words.create_population(size, word)
+    fitness_function = words.make_fitness_function(word)
+    generate_function = words.make_generate_function(0.2, 8, word)
+    ga = ga.genetic_algorithm(start_population, fitness_function,
+        generate_function, words.halt)
+    for generation in ga:
+        print [''.join(x.chromosome) for x in generation]
+        fitness = generation[0].fitness
+        w = ''.join(generation[0].chromosome)
+        print "%s %d" % (w, fitness)

@@ -4,7 +4,7 @@ Contains code specific to the genetic algorithm.
 import random
 
 
-def genetic_algorithm(population, fitness, generate, halt):
+def genetic_algorithm(population, fitness, generate, halt, reverse=True):
     """
     A generator that yields a list of genomes ordered by fitness (descending).
     Each yielded list represents a generation in the execution of the genetic
@@ -16,6 +16,8 @@ def genetic_algorithm(population, fitness, generate, halt):
     @param generate: an generator that produces offspring genomes for the next
     generation.
     @param halt: a function to test if the genetic algorithm should stop.
+    @reverse: a flag to indicate if fittest = highest score (True) or lowest
+    (False)
 
     Applies the fitness function to each genome in a generation, uses the
     generate function create the next generation from the existing one.
@@ -23,7 +25,7 @@ def genetic_algorithm(population, fitness, generate, halt):
     If the halt function returns True for a generation then the algorithm
     stops.
     """
-    current_population = sorted(population, key=fitness, reverse=True)
+    current_population = sorted(population, key=fitness, reverse=reverse)
     generation_count = 1
     yield current_population
     while not halt(current_population, generation_count):
@@ -46,6 +48,9 @@ def roulette_wheel_selection(population):
     total_fitness = 0.0
     for genome in population:
         total_fitness += genome.fitness
+
+    if total_fitness == 0.0:
+        return random.choice(population)
 
     random_point = random.uniform(0.0, total_fitness)
 

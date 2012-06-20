@@ -3,7 +3,7 @@ Tests for the module that encompasses first species counterpoint.
 """
 import unittest
 from foox.species.first import (Genome, create_population, is_parallel,
-    make_fitness_function, make_generate_function, halt)
+    make_fitness_function, make_generate_function, halt, MAX_REWARD)
 
 
 # The cantus firmus to use in the test suite.
@@ -143,14 +143,14 @@ class TestGenerateFunction(unittest.TestCase):
         Ensures the make_generate_function returns a callable (the generate
         function to use in the GA).
         """
-        result = make_generate_function(0.2, 7, CANTUS_FIRMUS)
+        result = make_generate_function(7, 0.2, CANTUS_FIRMUS)
         self.assertTrue(callable(result))
 
     def test_generate_function_returns_list(self):
         """
         Ensures the new population is a list.
         """
-        generate_function = make_generate_function(0.2, 7, CANTUS_FIRMUS)
+        generate_function = make_generate_function(7, 0.2, CANTUS_FIRMUS)
         g1 = Genome([1, 2, 3])
         g1.fitness = 1
         g2 = Genome([1, 2, 3])
@@ -163,7 +163,7 @@ class TestGenerateFunction(unittest.TestCase):
         """
         Ensure the new population is the correct length.
         """
-        generate_function = make_generate_function(0.2, 7, CANTUS_FIRMUS)
+        generate_function = make_generate_function(7, 0.2, CANTUS_FIRMUS)
         g1 = Genome([1, 2, 3])
         g1.fitness = 1
         g2 = Genome([1, 2, 3])
@@ -185,16 +185,13 @@ class TestHalt(unittest.TestCase):
         Ensure the function returns true if we're in a halting state.
         """
         g1 = Genome([1, 2, 3])
-        g1.fitness = 4
+        g1.fitness = MAX_REWARD
         g2 = Genome([1, 2, 3])
         g2.fitness = 3
         g3 = Genome([1, 2, 3])
         g3.fitness = 2
-        # Any fittest solution with fitness >= 4 means call a halt.
+        # Any fittest solution with fitness >= MAX_REWARD means call a halt.
         population = [g1, g2, g3]
-        result = halt(population, 1)
-        self.assertTrue(result)
-        population[0].fitness = 4.1
         result = halt(population, 1)
         self.assertTrue(result)
 
@@ -203,7 +200,7 @@ class TestHalt(unittest.TestCase):
         Ensures if the fittest genome has fitness < 4 then halt doesn't succeed.
         """
         g1 = Genome([1, 2, 3])
-        g1.fitness = 3.99
+        g1.fitness = MAX_REWARD - 0.1
         g2 = Genome([1, 2, 3])
         g2.fitness = 3
         g3 = Genome([1, 2, 3])
@@ -224,7 +221,7 @@ class TestGenome(unittest.TestCase):
         Ensures that we have a mutate method implemented.
         """
         genome = Genome([1, 2, 3])
-        self.assertNotEqual(NotImplemented, genome.mutate(1, 2, [1, 2, 3]))
+        self.assertNotEqual(NotImplemented, genome.mutate(2, 0.2, [1, 2, 3]))
 
     def test_mutate_bounded_by_arg_values(self):
         """
@@ -236,5 +233,5 @@ class TestGenome(unittest.TestCase):
         mutation_rate = 1 # mutate every time.
         mutation_range = 2 # will always mutate to thirds above the cf note.
         genome = Genome([5, 6, 7, 8, 9])
-        genome.mutate(mutation_rate, mutation_range, cantus_firmus)
+        genome.mutate(mutation_range, mutation_rate, cantus_firmus)
         self.assertEqual([3, 3, 3, 3, 3], genome.chromosome)

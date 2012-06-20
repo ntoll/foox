@@ -11,7 +11,7 @@ setup(
     author_email='ntoll@ntoll.org',
     url='http://packages.python.org/foox',
     packages=['foox', 'foox/species'],
-    scripts=['bin/foox'],
+    scripts=['bin/foox', 'bin/wordolution'],
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
