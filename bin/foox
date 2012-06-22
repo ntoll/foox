@@ -8,7 +8,7 @@ import argparse
 import logging
 
 from foox import ga, version, lilypond, words
-from foox.species import first
+from foox.species import first, second
 
 
 parser = argparse.ArgumentParser(
@@ -27,9 +27,23 @@ parser.add_argument('-o', '--out', help='name the output file')
 if __name__ == '__main__':
     args = parser.parse_args()
     cf = [int(x) for x in args.cantus_firmus]
-    start_population = first.create_population(1000, cf)
-    fitness_function = first.make_fitness_function(cf)
-    generate_function = first.make_generate_function(7, 0.4, cf)
+    species = args.species
+    output = 'out'
+    if args.out:
+        output = args.out
+
+    population_size = 1000
+    mutation_range = 7
+    mutation_rate = 0.4
+    if species == 1:
+        module = first
+    elif species == 2:
+        module = second
+
+    start_population = module.create_population(population_size, cf)
+    fitness_function = module.make_fitness_function(cf)
+    generate_function = module.make_generate_function(mutation_range,
+        mutation_rate, cf)
     ga = ga.genetic_algorithm(start_population, fitness_function,
         generate_function, first.halt)
     fitness = 0.0
@@ -37,6 +51,5 @@ if __name__ == '__main__':
         fitness = generation[0].fitness
         print fitness
         print generation[0]
-    with open('out.ly', 'w') as output:
-        output.write(lilypond.render(1, cf, generation[0].chromosome))
-    # run lilypond
+    with open('%s.ly' % output, 'w') as output:
+        output.write(lilypond.render(species, cf, generation[0].chromosome))

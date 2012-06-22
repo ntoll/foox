@@ -13,7 +13,7 @@ def genetic_algorithm(population, fitness, generate, halt, reverse=True):
     @param population: the starting population of genomes.
     @param fitness: a function which given a genome will return a fitness
     score.
-    @param generate: an generator that produces offspring genomes for the next
+    @param generate: an function that produces offspring genomes for the next
     generation.
     @param halt: a function to test if the genetic algorithm should stop.
     @reverse: a flag to indicate if fittest = highest score (True) or lowest
@@ -30,7 +30,7 @@ def genetic_algorithm(population, fitness, generate, halt, reverse=True):
     yield current_population
     while not halt(current_population, generation_count):
         generation_count += 1
-        new_generation = [genome for genome in generate(current_population)]
+        new_generation = generate(current_population)
         current_population = sorted(new_generation, key=fitness, reverse=True)
         yield current_population
 
@@ -49,6 +49,7 @@ def roulette_wheel_selection(population):
     for genome in population:
         total_fitness += genome.fitness
 
+    # Ensures random selection if no solutions are "fit".
     if total_fitness == 0.0:
         return random.choice(population)
 
@@ -91,10 +92,10 @@ class Genome(object):
         The chromosome is a list of genes that encode specific characteristics
         of the candidate solution (genome). The different settings that a gene
         may possess are called alleles, and their location in the chromosome is
-        called the locus. The state of the alleles in a particular chromosome is
-        called the genotype. It is the genotype that provides information about
-        the state of the actual candidate solution. The candidate solution
-        itself is called a genome (hence the name of this class).
+        called the locus. The state of the alleles in a particular chromosome
+        is called the genotype. It is the genotype that provides information
+        about the state of the actual candidate solution. The candidate
+        solution itself is called a genome (hence the name of this class).
         """
         self.chromosome = chromosome
         self.fitness = None # Denotes unknown. Set by the fitness function.
@@ -109,7 +110,9 @@ class Genome(object):
     def mutate(self, mutation_range, mutation_rate, context):
         """
         Mutates the genotypes no more than the mutation_range depending on the
-        mutation_rate given a certain context (to ensure the mutation is valid).
+        mutation_rate given a certain context (to ensure the mutation is
+        valid).
+
         To be overridden as per requirements in the child classes.
         """
         return NotImplemented

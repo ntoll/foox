@@ -30,7 +30,7 @@ def create_population(number, word):
 
 def levenshtein(s1, s2):
     """
-    Calculates the levenshtein distance between two strings. Based upon the
+    Calculates the Levenshtein distance between two strings. Based upon the
     function found here:
 
     http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
@@ -55,10 +55,11 @@ def levenshtein(s1, s2):
 
 def make_fitness_function(word):
     """
-    Given the target word, will use it in a closure and return a function
-    that takes a single Genome instance and returns a fitness score (its
-    levenshtein distance).
+    Given the target word, will return a function that takes a single Genome
+    instance and returns a fitness score (based upon its Levenshtein distance).
     """
+
+    word_len = len(word)
 
     def fitness_function(genome):
         """
@@ -67,7 +68,7 @@ def make_fitness_function(word):
         if genome.fitness:
             return genome.fitness
 
-        genome.fitness = abs(len(word) -
+        genome.fitness = abs(word_len -
             levenshtein(word, ''.join(genome.chromosome)))
         return genome.fitness
 
@@ -76,15 +77,13 @@ def make_fitness_function(word):
 
 def make_generate_function(mutation_range, mutation_rate, word):
     """
-    Given thetarget  word, mutation range and mutation rate will use them in
-    a closure and return a function that takes a seed generation and returns a
-    new population.
+    Given a target word, mutation range and mutation rate will use return a
+    function that takes a seed generation and returns a new generation.
     """
 
     def generate(seed_generation):
         """
-        Given a seed generation will return a new generation of candidate
-        solutions assuming the cantus_firmus in the closure.
+        Given a seed generation will return a new generation of candidates.
         """
         length = len(seed_generation)
         # Keep the fittest 50%
@@ -123,14 +122,13 @@ def halt(population, generation_count):
 
 class Genome(ga.Genome):
     """
-    A class to represent a candidate solution for first species counterpoint.
+    A class to represent a candidate solution for a target word.
     """
 
     def mutate(self, mutation_rate, mutation_range, context):
         """
-        Mutates the genotypes no more than the mutation_range depending on the
-        mutation_rate given the cantus_firmus passed in as the context (to
-        ensure the mutation is valid).
+        Mutates the genotypes. Only the mutation_rate is used in this simple
+        example.
         """
         for locus in range(len(self.chromosome)):
             if mutation_rate >= random.random():

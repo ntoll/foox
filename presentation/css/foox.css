@@ -33,3 +33,31 @@ td {
     padding-right: 16px;
     min-width: 200px;
 }
+
+.footer {
+    position: absolute;
+    bottom: 10px;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.streetfighter img {
+    border: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+
+.streetfighter td {
+    vertical-align: top;
+    font-family: Times;
+    font-weight: bold;
+    color: orange;
+}
+
+.streetfighter table {
+    margin-top: 60px;
+}
+
+.streetfighter .state-background {
+    background: black !important;
+}

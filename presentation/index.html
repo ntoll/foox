@@ -52,6 +52,10 @@
                     <script>
                         if( navigator.userAgent.match( /(iPhone|iPad|iPod|Android)/i ) ) document.write( '<p style="color: rgba(0,0,0,0.3); text-shadow: none;">('+'Tap to navigate'+')</p>' );
                     </script>
+                    <div class="footer">Press space to move forward, or use
+                    the arrow keys. Some slides are two dimensional so
+                    use the up and down arrows. The compass on the right
+                    shows available directions.</div>
                 </section>
                 <section>
                 <h2>Two Contrasting Melodies</h2>
@@ -215,15 +219,17 @@
                     </section>
                 </section>
                 <section>
-                    <h1>But How Does it Work?</h2>
-                </section>
-                <section>
-                    <h2>If only...</h2>
-                    <img src="assets/images/dummies.png"/>
-                </section>
-                <section>
-                    <h2>Actually...</h2>
-                    <img src="assets/images/Gradus-ad-Parnassum.jpg"/>
+                    <section>
+                        <h1>But How Does it Work?</h2>
+                    </section>
+                    <section>
+                        <h2>If only...</h2>
+                        <img src="assets/images/dummies.png"/>
+                    </section>
+                    <section>
+                        <h2>Actually...</h2>
+                        <img src="assets/images/Gradus-ad-Parnassum.jpg"/>
+                    </section>
                 </section>
                 <section>
                     <h1>Johann Joseph Fux</h1>
@@ -231,40 +237,43 @@
                     <p>(1660-1741)</p>
                 </section>
                 <section>
-                    <h2>Gradus ad Parnassum</h2>
-                    <p>Steps to Parnassus (dwelling place of the gods).</p>
-                    <ul>
-                        <li class="fragment">Five species of rules of increasing complexity.</li>
-                        <li class="fragment">The rules describe the valid <em>pitch</em> and <em>rhythmic</em> relationships between notes.</li>
-                        <li class="fragment">Initially the counterpoint has two voices:
-                            <ul>
-                                <li>one, the <em>Cantus Firmus</em>, is given to the student,</li>
-                                <li>the other is created by the student with rules from a specific species.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </section>
-                <section>
-                    <h2>Cantus Firmus</h2>
-                    <p>(<q>Fixed song</q> based on mediaeval plainchant)</p>
-                    <img src="assets/images/cantus_firmus.png"/>
-                    <audio src="assets/midi/cantus_firmus.ogg" preload="auto" controls></audio>
-                </section>
-                <section>
-                    <h2>Rules Concerning Pitch</h2>
-                    <img src="assets/images/melody_shapes_combined_interval.png"/>
-                    <p>Governing valid <em>intervals</em> (distance) between notes.</p>
-                    <img src="assets/images/intervals.png"/>
-                    <audio src="assets/midi/intervals.ogg" preload="auto" controls></audio>
-                </section>
-                <section>
-                    <h2>Rules for Movement Through Time</h2>
-                    <img src="assets/images/motion.png"/>
-                    <img src="assets/images/motion_lines.png"/>
-                    <audio src="assets/midi/motion.ogg" preload="auto" controls></audio>
-                    <p>Parallel, <span class="similar">Similar</span>,
-                    <span class="contrary">Contrary</span> &amp;
-                    <span class="oblique">Oblique</span> motion.</p>
+                    <section>
+                        <h2>Gradus ad Parnassum</h2>
+                        <p>Steps to Parnassus (dwelling place of the gods).</p>
+                        <ul>
+                            <li class="fragment">Five species of rules of increasing complexity.</li>
+                            <li class="fragment">The rules describe the valid <em>pitch</em> and <em>rhythmic</em> relationships between notes.</li>
+                            <li class="fragment">Initially the counterpoint has two voices:
+                                <ul>
+                                    <li>one, the <em>Cantus Firmus</em>, is given to the student,</li>
+                                    <li>the other is created by the student with rules from a specific species.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Cantus Firmus</h2>
+                        <p>(<q>Fixed song</q> based on medieval plainchant)</p>
+                        <img src="assets/images/cantus_firmus.png"/>
+                        <audio src="assets/midi/cantus_firmus.ogg" preload="auto" controls></audio>
+                    </section>
+                    <section>
+                        <h2>Rules Concerning Pitch</h2>
+                        <img src="assets/images/melody_shapes_combined_interval.png"/>
+                        <p>Governing valid <em>intervals</em> (distance) between notes.</p>
+                        <img src="assets/images/intervals.png"/>
+                        <audio src="assets/midi/intervals.ogg" preload="auto" controls></audio>
+                    </section>
+                    <section>
+                        <h2>Rules for Movement Through Time</h2>
+                        <img src="assets/images/motion.png"/>
+                        <img src="assets/images/motion_lines.png"/>
+                        <audio src="assets/midi/motion.ogg" preload="auto" controls></audio>
+                        <p><span class="similar">Similar</span>,
+                        <span class="parallel">Parallel</span>,
+                        <span class="contrary">Contrary</span> &amp;
+                        <span class="oblique">Oblique</span> motion.</p>
+                    </section>
                 </section>
                 <section>
                     <h1>How can I use Fux's species to make computer generated counterpoint?</h1>
@@ -284,32 +293,462 @@ def genetic_algorithm(population, fitness, generate, halt):
 
     @param population: the starting population of genomes.
     @param fitness: a function which given a genome will return a fitness
-    score.
-    @param generate: a generator that produces offspring genomes for the next
-    generation.
+        score.
+    @param generate: a function that produces offspring genomes for the next
+        generation.
     @param halt: a function to test if the genetic algorithm should stop.
-
-    Applies the fitness function to each genome in a generation, uses the
-    generate function create the next generation from the existing one.
-
-    If the halt function returns True for a generation then the algorithm
-    stops.
     """
     current_population = sorted(population, key=fitness, reverse=True)
     generation_count = 1
     yield current_population
     while not halt(current_population, generation_count):
         generation_count += 1
-        new_generation = [genome for genome in generate(current_population)]
+        new_generation = generate(current_population)
         current_population = sorted(new_generation, key=fitness, reverse=True)
         yield current_population
 
 </code></pre>
                 </section>
                 <section>
+                    <h2>Wordolution: An example / detour</h2>
+                    <p>Wordolution evolves a solution from a starting population of words containing random letters:</p>
+                    <pre><code class="bash">
+$ wordolution -w cat
+['pot', 'int', 'qag', 'ovw', 'wmb', 'jzs', 'gnp', 'oyw', 'gze', 'mss']
+pot 1
+['hot', 'qag', 'bnt', 'qot', 'ovt', 'nag', 'owt', 'pdt', 'bnt', 'hot']
+hot 1
+['qat', 'hot', 'qag', 'bnt', 'qot', 'ovt', 'qrt', 'bot', 'zqg', 'hoy']
+qat 2
+['qat', 'qat', 'zat', 'nat', 'qat', 'qat', 'jaj', 'vxc', 'vxc', 'vxc']
+qat 2
+['qat', 'nat', 'zat', 'eat', 'lat', 'lat', 'nat', 'laj', 'iab', 'wut']
+qat 2
+['lat', 'zat', 'gat', 'zat', 'zat', 'zat', 'zat', 'yat', 'gct', 'zht']
+lat 2
+['cat', 'lat', 'zat', 'gat', 'zat', 'zat', 'gat', 'maw', 'lft', 'zac']
+cat 3
+                    </code></pre>
+                    <p>(A truncated evolution of <q>cat</q>)</p>
+                </section>
+                <section>
+                    <section>
+                        <p>Candidate solutions are instances of Genome (base class)</p>
+                        <pre><code contenteditable class="python">
+    class Genome(object):
+        """
+        Genomes represent candidate solutions.
+        """
+
+        def __init__(self, chromosome):
+            """
+            The chromosome is a list of genes that encode specific characteristics
+            of the candidate solution (genome). The different settings that a gene
+            may possess are called alleles, and their location in the chromosome is
+            called the locus. The state of the alleles in a particular chromosome
+            is called the genotype. It is the genotype that provides information
+            about the state of the actual candidate solution. The candidate
+            solution itself is called a genome (hence the name of this class).
+            """
+            self.chromosome = chromosome # e.g. ['c', 'a', 't']
+            self.fitness = None # Denotes unknown. Set by the fitness function.
+
+        def breed(self, other):
+            """
+            Returns two new offspring bred from this and another instance. Uses the
+            crossover function.
+            """
+            return crossover(self, other, self.__class__)
+
+        def mutate(self, mutation_range, mutation_rate, context):
+            """
+            To be overridden as per requirements in the child classes.
+            """
+            return NotImplemented
+
+        def __eq__(self, other):
+            ... etc ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <p>The crossover function is synonymous with breeding new
+                        candidate solutions. The <q>genetic</q>
+                        information from both parents is mixed together to create
+                        two new <q>children</q>.</p>
+                        <pre><code contenteditable class="python">
+    def crossover(mum, dad, klass):
+        """
+        Given two parent genomes and a Genome class, randomly selects a midpoint
+        and then swaps the ends of each genome's chromosome to create two new
+        genomes that are returned in a tuple.
+        """
+        # Check if the parents are the same,
+        if mum == dad:
+            # and do nothing if they are.
+            return (mum, dad)
+
+        crossover_point = random.randint(0, len(mum))
+
+        baby1 = klass(mum[:crossover_point] + dad[crossover_point:])
+        baby2 = klass(dad[:crossover_point] + mum[crossover_point:])
+
+        return (baby1, baby2)
+                        </code></pre>
+                        <p>So <q>cat</q> and <q>dog</q> could produce <q>cog</q>
+                        and <q>dat</q>.</p>
+                    </section>
+                    <section>
+                        <p>Wordolution's Genome sub-class</p>
+                        <pre><code contenteditable class="python">
+    class Genome(ga.Genome):
+        """
+        A class to represent a candidate solution for a target word.
+        """
+
+        def mutate(self, mutation_rate, mutation_range, context):
+            """
+            Mutates the genotypes. Only the mutation_rate is used in this simple
+            example.
+            """
+            for locus in range(len(self.chromosome)):
+                if mutation_rate &gt;= random.random():
+                    # Verbose, but correctly named for clarity.
+                    new_allele = random.choice(LETTERS)
+                    self.chromosome[locus] = new_allele
+                    self.fitness = None # force recalculation of fitness
+                        </code></pre>
+                        <p>The <code>mutate</code> method has a
+                        <code>mutation_rate</code> chance of changing a letter at
+                        random.</p>
+                    </section>
+                </section>
+                <section>
+                    <p>The fitness of a candidate solution is based upon its
+                    Levenshtein distance (number of different characters) from
+                    the target word.</p>
+                    <pre><code contenteditable class="python">
+def make_fitness_function(word):
+    """
+    Given the target word, will return a function that takes a single Genome
+    instance and returns a fitness score (based upon its Levenshtein distance).
+    """
+
+    word_len = len(word)
+
+    def fitness_function(genome):
+        """
+        Returns the fitness score of the genome.
+        """
+        if genome.fitness:
+            return genome.fitness
+
+        genome.fitness = abs(word_len -
+            levenshtein(word, ''.join(genome.chromosome)))
+        return genome.fitness
+
+    return fitness_function
+                    </code></pre>
+                </section>
+                <section>
+                    <section>
+                        <p>The <code>generate</code> function makes new generations.</p>
+                        <pre><code contenteditable class="python">
+    def make_generate_function(mutation_range, mutation_rate, word):
+        """
+        Given a target word, mutation range and mutation rate will use return a
+        function that takes a seed generation and returns a new generation.
+        """
+
+        def generate(seed_generation):
+            """
+            Given a seed generation will return a new generation of candidates.
+            """
+            length = len(seed_generation)
+            # Keep the fittest 50%
+            new_generation = seed_generation[:length/2]
+
+            # Breed the remaining 50% using roulette wheel selection
+            offspring = []
+            while len(offspring) &lt; length/2:
+                mum = ga.roulette_wheel_selection(seed_generation)
+                dad = ga.roulette_wheel_selection(seed_generation)
+                children = mum.breed(dad)
+                offspring.extend(children)
+
+            # Mutate
+            for genome in offspring:
+                genome.mutate(mutation_range, mutation_rate, word)
+
+            # Ensure the new generation is the right length
+            new_generation.extend(offspring)
+            new_generation = new_generation[:length]
+
+            return new_generation
+
+        return generate
+                        </code></pre>
+                    </section>
+                    <section>
+                        <p>Casino like selection that favours the fittest.</p>
+                        <pre><code contenteditable class="python">
+    def roulette_wheel_selection(population):
+        """
+        A random number between 0 and the total fitness score of all the genomes in
+        a population is chosen (a point within a slice of a roulette wheel). The
+        code iterates through the genomes adding up the fitness scores. When the
+        subtotal is greater than the randomly chosen point it returns the genome
+        at that point "on the wheel".
+
+        See: https://en.wikipedia.org/wiki/Fitness_proportionate_selection
+        """
+        total_fitness = 0.0
+        for genome in population:
+            total_fitness += genome.fitness
+
+        # Ensures random selection if no solutions are "fit".
+        if total_fitness == 0.0:
+            return random.choice(population)
+
+        random_point = random.uniform(0.0, total_fitness)
+
+        fitness_tally = 0.0
+        for genome in population:
+            fitness_tally += genome.fitness
+            if fitness_tally &gt; random_point:
+                return genome
+                        </code></pre>
+                    </section>
+                    <section>
+                        <img src="assets/images/roulette.png"/>
+                        <p>Choose random point between zero and the sum of the fitness scores.</p>
+                    </section>
+                </section>
+                <section>
+                    <p>The <code>halt</code> function checks if an acceptable solution has evolved (or gives up after <em>n</em> generations).</p>
+                    <pre><code contenteditable class="python">
+def halt(population, generation_count):
+    """
+    Given a population of candidate solutions and generation count (the number
+    of epochs the algorithm has run) will return a boolean to indicate if an
+    acceptable solution has been found within the referenced population.
+    """
+    word_length = len(population[0].chromosome)
+    return population[0].fitness == word_length or generation_count &gt; 100
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Encoding Music for foox</h2>
+                    <img src="assets/images/encoding.png"/>
+                    <p><code contenteditable class="python">
+                    [5, 7, 6, 5, 8, 7, 9, 8, 7, 6, 5]
+                    </code></p>
+                    <img src="assets/images/cantus_firmus.png"/>
+                    <audio src="assets/midi/cantus_firmus.ogg" preload="auto" controls></audio>
+                </section>
+                <section>
+                    <section>
+                        <h2>Foox Fitness Functions</h2>
+                        <p>Specific rules of a species are encoded as various
+                        tests and punished or rewarded accordingly:</p>
+                        <pre><code contenteditable class="python">
+            # Make sure the solution starts correctly (at a 5th or octave).
+            first_interval = contrapunctus[0] - cantus_firmus[0]
+            if first_interval == 7 or first_interval == 4:
+                fitness_score += REWARD_FIRST
+            else:
+                fitness_score -= PUNISH_FIRST
+
+            # Make sure the solution finishes correctly (at an octave).
+            if contrapunctus[-1] - cantus_firmus[-1] == 7:
+                fitness_score += REWARD_LAST
+            else:
+                fitness_score -= PUNISH_LAST
+                        </code></pre>
+                        <p>(An example from first species counterpoint.)</p>
+                    </section>
+                    <section>
+                        <h2>Foox Fitness Functions</h2>
+                        <pre><code contenteditable class="python">
+    # Reward / punishment to ensure the solution starts correctly (5th or 8ve).
+    REWARD_FIRST = 1
+    PUNISH_FIRST = 0.1
+    # Reward / punishment to ensure the solution finishes correctly (at an 8ve).
+    REWARD_LAST = 1
+    PUNISH_LAST = 0.1
+    # Reward / punishment to ensure the penultimate note is step wise onto the
+    # final note.
+    REWARD_LAST_STEP = 1
+    PUNISH_LAST_STEP = 0.7
+    # Reward / punish contrary motion onto the final note.
+    REWARD_LAST_MOTION = 1
+    PUNISH_LAST_MOTION = 0.1
+    # Punishment if the penultimate note is a repeated note.
+    PUNISH_REPEATED_PENULTIMATE = 0.1
+    # Make sure the movement to the penultimate note isn't from too
+    # far away (not greater than a third).
+    REWARD_PENULTIMATE_PREPARATION = 1
+    PUNISH_PENULTIMATE_PREPARATION = 0.7
+    # Punish parallel fifths or octaves.
+    PUNISH_PARALLEL_FIFTHS_OCTAVES = 0.5
+    # Punishment for too many repeated notes.
+    PUNISH_REPEATS = 0.1
+    # Punishment for too many parallel thirds
+    PUNISH_THIRDS = 0.1
+    # Punishment for too many parallel sixths.
+    PUNISH_SIXTHS = 0.1
+    # Punishment for too many parallel/similar movements.
+    PUNISH_PARALLEL = 0.1
+    # Punishment for too many large leaps in the melody.
+    PUNISH_LEAPS = 0.1
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <h2>A simple command</h2>
+                    <pre><code class="bash">
+$ foox -s 1 -cf 5 7 6 5 8 7 9 8 7 6 5 -o first
+
+... evolution happens ...
+
+$ lilypond first.ly
+
+... lilypond magic ...
+
+$ evince first.pdf
+$ timidity first.midi
+$ foox --help
+usage: foox [-h] [--version] [-v] -s SPECIES -cf
+            [CANTUS_FIRMUS [CANTUS_FIRMUS ...]] [-o OUT]
+
+Evolves valid solutions to species counterpoint problems.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -v, --verbose         increased amount of verbosity
+  -s SPECIES, --species SPECIES
+                        indicated species to use (1-5)
+  -cf [CANTUS_FIRMUS [CANTUS_FIRMUS ...]], --cantus-firmus [CANTUS_FIRMUS [CANTUS_FIRMUS ...]]
+                        specify the cantus firmus
+  -o OUT, --out OUT     name the output file
+
+                    </code></pre>
                 </section>
                 <section>
                     <h1>So, how does it perform..?</h1>
+                </section>
+                <section>
+                    <section>
+                        <h1>First Species Counterpoint</h1>
+                    </section>
+                    <section data-state="streetfighter">
+                        <img src="assets/images/speciescounterpointfighter.png"/>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="assets/images/fux_avatar.jpg"/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <img src="assets/images/python_avatar.png"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                FUX
+                                </td>
+                                <td>
+                                    <img src="assets/images/streetfighter_vs.png"/>
+                                </td>
+                                <td>
+                                PYTHON
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Results</h2>
+                        <img src="assets/images/first_fux.png"/>
+                        <audio src="assets/midi/first_fux.ogg" preload="auto" controls></audio>
+                        <img src="assets/images/first_foox.png"/>
+                        <audio src="assets/midi/first_foox.ogg" preload="auto" controls></audio>
+                    </section>
+                    <section>
+                        <h2>Results</h2>
+                        <p><img src="assets/images/fux_avatar.jpg"/></p>
+                        <p><img src="assets/images/python_avatar.png"/></p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Second Species Counterpoint</h1>
+                    </section>
+                    <section data-state="streetfighter">
+                        <img src="assets/images/speciescounterpointfighter.png"/>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="assets/images/mozart_avatar.jpg"/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <img src="assets/images/python_avatar.png"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                MOZART
+                                </td>
+                                <td>
+                                    <img src="assets/images/streetfighter_vs.png"/>
+                                </td>
+                                <td>
+                                PYTHON
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Results</h2>
+
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Third Species Counterpoint</h1>
+                    </section>
+                    <section data-state="streetfighter">
+                        <img src="assets/images/speciescounterpointfighter.png"/>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="assets/images/python_avatar.png"/>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <img src="assets/images/fux_avatar.jpg"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                PYTHON
+                                </td>
+                                <td>
+                                    <img src="assets/images/streetfighter_vs.png"/>
+                                </td>
+                                <td>
+                                FUX
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Results</h2>
+
+                    </section>
                 </section>
                 <section>
                     <h1>Image Credits</h1>
@@ -328,6 +767,7 @@ def genetic_algorithm(population, fitness, generate, halt):
                         <li><a href="https://en.wikipedia.org/wiki/File:Sky_and_Water_I.jpg">Sky and Water I</a> (<a href="https://en.wikipedia.org/wiki/M._C._Escher">M.C.Escher</a>)</li>
                         <li><a href="https://en.wikipedia.org/wiki/File:Johann_Sebastian_Bach.jpg">Johann Sebastian Bach</a></li>
                         <li><a href="http://en.wikipedia.org/wiki/File:Johann_Joseph_Fux.jpg">Johann Joseph Fux</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/File:Mozart_(unfinished)_by_Lange_1782.jpg">Wolfgang Amadeus Mozart</a></li>
                     </ul>
                 </section>
                 <section>
@@ -351,7 +791,6 @@ def genetic_algorithm(population, fitness, generate, halt):
         <!-- Optional libraries for code syntax highlighting and classList support in IE9 -->
         <script src="lib/highlight.js"></script>
         <script src="lib/classList.js"></script>
-
         <script src="js/reveal.min.js"></script>
         <script>
             Reveal.initialize({

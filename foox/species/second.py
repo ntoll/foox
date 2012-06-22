@@ -1,14 +1,17 @@
 """
-This module encapsulates the behaviour of first species counterpoint.
+This module encapsulates the behaviour of second species counterpoint.
 """
 import random
 
 import foox.ga as ga
-from utils import is_parallel, make_generate_function
+from utils import is_parallel, make_generate_function, is_stepwise_motion
 
 
-# Intervals between notes that are allowed in first sepcies counterpoint.
-VALID_INTERVALS = [2, 4, 5, 7, 9, 11]
+# Intervals between notes that are allowed in second sepcies counterpoint.
+CONSONANCES = [2, 4, 5, 7, 9, 11]
+DISSONANCES = [3, 6, 8, 10]
+VALID_FIRST_BEAT_INTERVALS = CONSONANCES
+VALID_THIRD_BEAT_INTERVALS = CONSONANCES + DISSONANCES
 
 # Various rewards and punishments used with different aspects of the solution.
 
@@ -33,14 +36,13 @@ REWARD_PENULTIMATE_PREPARATION = 1
 PUNISH_PENULTIMATE_PREPARATION = 0.7
 # Punish parallel fifths or octaves.
 PUNISH_PARALLEL_FIFTHS_OCTAVES = 0.5
-# Punishment for too many repeated notes.
-PUNISH_REPEATS = 0.1
-# Punishment for too many parallel thirds
-PUNISH_THIRDS = 0.1
-# Punishment for too many parallel sixths.
-PUNISH_SIXTHS = 0.1
 # Punishment for too many parallel/similar movements.
 PUNISH_PARALLEL = 0.1
+# Reward / punish correct stepwise movement around dissonances.
+REWARD_STEPWISE_MOTION = 2
+PUNISH_STEPWISE_MOTION = 0.1
+# Punishment for too many repeated notes.
+PUNISH_REPEATS = 0.1
 # Punishment for too many large leaps in the melody.
 PUNISH_LEAPS = 0.1
 
@@ -57,11 +59,16 @@ def create_population(number, cantus_firmus):
     for i in range(number):
         new_chromosome = []
         for note in cantus_firmus:
-            valid_range = [interval for interval in
-                VALID_INTERVALS if (interval + note) < 17]
-            interval = random.choice(valid_range)
-            new_chromosome.append(note+interval)
-        genome = Genome(new_chromosome)
+            valid_first_beat_range = [interval for interval in
+                VALID_FIRST_BEAT_INTERVALS if (interval + note) < 17]
+            valid_third_beat_range = [interval for interval in
+                VALID_THIRD_BEAT_INTERVALS if (interval + note) < 17]
+            first_beat_interval = random.choice(valid_first_beat_range)
+            third_beat_interval = random.choice(valid_third_beat_range)
+            new_chromosome.append(note+first_beat_interval)
+            new_chromosome.append(note+third_beat_interval)
+        # Remove the last minim since it's surplus to requirements.
+        genome = Genome(new_chromosome[:-1])
         result.append(genome)
     return result
 
@@ -90,12 +97,8 @@ def make_fitness_function(cantus_firmus):
 
         # The fitness score to be returned.
         fitness_score = 0.0
-        # Counts the number of repeated notes in the contrapunctus.
+        # Counts the number of repeated notes.
         repeats = 0
-        # Counts consecutive parallel thirds.
-        thirds = 0
-        # Counts consecutive parallel sixths.
-        sixths = 0
         # Counts the amount of parallel motion.
         parallel_motion = 0
         # Counts the number of jumps in the melodic contour.
@@ -145,10 +148,11 @@ def make_fitness_function(cantus_firmus):
                 fitness_score -= PUNISH_PENULTIMATE_PREPARATION
 
         # Check the fitness of the body of the solution.
-        solution = zip(contrapunctus, cantus_firmus)
-        last_notes = solution.pop()
+        last_notes = (contrapunctus[0], cantus_firmus[0])
         last_interval = last_notes[0] - last_notes[1]
-        for contrapunctus_note, cantus_firmus_note in solution[1:]:
+        for i in range(1, len(contrapunctus)):
+            contrapunctus_note = contrapunctus[i]
+            cantus_firmus_note = cantus_firmus[i/2]
             current_notes = (contrapunctus_note, cantus_firmus_note)
             current_interval = contrapunctus_note - cantus_firmus_note
 
@@ -157,42 +161,32 @@ def make_fitness_function(cantus_firmus):
                 (last_interval == 4 or last_interval == 7)):
                 fitness_score -= PUNISH_PARALLEL_FIFTHS_OCTAVES
 
-            # Check if the melody is a repeating note.
-            if contrapunctus_note == last_notes[0]:
-                repeats += 1
-
-            # Check for parallel thirds.
-            if current_interval == 2 and last_interval == 2:
-                thirds += 1
-
-            # Check for parallel sixths.
-            if current_interval == 4 and last_interval == 4:
-                sixths += 1
-
             # Check for parallel motion.
             if is_parallel(last_notes, current_notes):
                 parallel_motion += 1
 
+            # Check if the melody is a repeating note.
+            if contrapunctus_note == last_notes[0]:
+                repeats += 1
+
             # Check the melodic contour.
             contour_leap = abs(current_notes[0] - last_notes[0])
-            if contour_leap > 2:
+            if contour_leap >= 2:
                 jump_contour += contour_leap - 2
+
+            # Ensure dissonances are part of a step-wise movement.
+            if i % 2 and current_interval in DISSONANCES:
+                # The current_note is a dissonance on the third beat of a bar.
+                # Check that both the adjacent notes are only a step away.
+                if not is_stepwise_motion(contrapunctus, i):
+                    fitness_score -= PUNISH_STEPWISE_MOTION
 
             last_notes = current_notes
             last_interval = current_interval
 
-
         # Punish too many (> 1/3) repeated notes.
         if repeats > repeat_threshold:
             fitness_score -= PUNISH_REPEATS
-
-        # Punish too many (> 1/3) parallel thirds
-        if thirds > repeat_threshold:
-            fitness_score -= PUNISH_THIRDS
-
-        # Punish too many (> 1/3) parallel sixths.
-        if sixths > repeat_threshold:
-            fitness_score -= PUNISH_SIXTHS
 
         # Punish too many (> 1/3) parallel movements.
         if parallel_motion > repeat_threshold:
@@ -215,14 +209,12 @@ def halt(population, generation_count):
     of epochs the algorithm has run) will return a boolean to indicate if an
     acceptable solution has been found within the referenced population.
     """
-    # All four required fingerprints exist in a solution that has not been
-    # punished by for over-use of thirds, sixths, parallel motion etc.
-    return population[0].fitness >= MAX_REWARD or generation_count > 100
+    return population[0].fitness >= MAX_REWARD  or generation_count > 100
 
 
 class Genome(ga.Genome):
     """
-    A class to represent a candidate solution for first species counterpoint.
+    A class to represent a candidate solution for second species counterpoint.
     """
 
     def mutate(self, mutation_range, mutation_rate, context):
@@ -231,13 +223,21 @@ class Genome(ga.Genome):
         mutation_rate given and the cantus_firmus passed in as the context (to
         ensure the mutation is valid).
         """
-        valid_mutation_intervals = [interval for interval in VALID_INTERVALS
-            if interval <= mutation_range]
+        first_beat_mutation_intervals = [interval for interval in
+            VALID_FIRST_BEAT_INTERVALS if interval <= mutation_range]
+        third_beat_mutation_intervals = [interval for interval in
+            VALID_THIRD_BEAT_INTERVALS if interval <= mutation_range]
         for locus in range(len(self.chromosome)):
             if mutation_rate >= random.random():
-                cantus_firmus_note = context[locus]
+                cantus_firmus_note = context[locus/2]
+                if locus % 2:
+                    # Current melody note is on the third beat of the bar
+                    mutation_intervals = third_beat_mutation_intervals
+                else:
+                    # Current melody note is on the first beat of the bar.
+                    mutation_intervals = first_beat_mutation_intervals
                 valid_mutation_range = [interval for interval in
-                    valid_mutation_intervals if
+                    mutation_intervals if
                     (interval + cantus_firmus_note) < 17]
                 mutation = random.choice(valid_mutation_range)
                 new_allele = cantus_firmus_note + mutation

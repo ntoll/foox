@@ -1,8 +1,8 @@
 """
-Tests for the module that encompasses first species counterpoint.
+Tests for the module that encompasses second species counterpoint.
 """
 import unittest
-from foox.species.first import (Genome, create_population, is_parallel,
+from foox.species.second import (Genome, create_population, is_parallel,
     make_fitness_function, make_generate_function, halt, MAX_REWARD)
 
 
@@ -34,14 +34,27 @@ class TestCreatePopulation(unittest.TestCase):
         """
         Tests that only valid consonant intervals are used.
         """
-        valid_intervals = [2, 4, 5, 7, 9, 11]
+        valid_first_beat_intervals = [2, 4, 5, 7, 9, 11]
+        valid_third_beat_intervals = valid_first_beat_intervals + [3, 6, 8, 10]
         result = create_population(20, CANTUS_FIRMUS)
         for genome in result:
             for i in range(len(genome.chromosome)):
                 contrapunctus_note = genome.chromosome[i]
-                cantus_firmus_note = CANTUS_FIRMUS[i]
+                cantus_firmus_note = CANTUS_FIRMUS[i/2]
                 interval = contrapunctus_note - cantus_firmus_note
-                self.assertIn(interval, valid_intervals)
+                if i % 2:
+                    self.assertIn(interval, valid_third_beat_intervals)
+                else:
+                    self.assertIn(interval, valid_first_beat_intervals)
+
+    def test_solutions_have_correct_number_of_notes(self):
+        """
+        Ensures that all solutions have the expected number of notes.
+        """
+        result = create_population(20, CANTUS_FIRMUS)
+        expected_length = (len(CANTUS_FIRMUS) * 2) - 1
+        for genome in result:
+            self.assertEqual(expected_length, len(genome.chromosome))
 
 
 class TestFitnessFunction(unittest.TestCase):
