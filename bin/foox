@@ -8,7 +8,7 @@ import argparse
 import logging
 
 from foox import ga, version, lilypond, words
-from foox.species import first, second
+from foox.species import first, second, third
 
 
 parser = argparse.ArgumentParser(
@@ -36,20 +36,43 @@ if __name__ == '__main__':
     mutation_range = 7
     mutation_rate = 0.4
     if species == 1:
-        module = first
+        population_size = first.DEFAULT_POPULATION_SIZE
+        mutation_range = first.DEFAULT_MUTATION_RANGE
+        mutation_rate = first.DEFAULT_MUTATION_RATE
+        start_population = first.create_population(population_size, cf)
+        fitness_function = first.make_fitness_function(cf)
+        generate_function = first.make_generate_function(mutation_range,
+            mutation_rate, cf)
+        halt_function = first.halt
     elif species == 2:
-        module = second
+        population_size = second.DEFAULT_POPULATION_SIZE
+        mutation_range = second.DEFAULT_MUTATION_RANGE
+        mutation_rate = second.DEFAULT_MUTATION_RATE
+        start_population = second.create_population(population_size, cf)
+        fitness_function = second.make_fitness_function(cf)
+        generate_function = first.make_generate_function(mutation_range,
+            mutation_rate, cf)
+        halt_function = second.make_halt_function(cf)
+    elif species == 3:
+        population_size = third.DEFAULT_POPULATION_SIZE
+        mutation_range = third.DEFAULT_MUTATION_RANGE
+        mutation_rate = third.DEFAULT_MUTATION_RATE
+        start_population = third.create_population(population_size, cf)
+        fitness_function = third.make_fitness_function(cf)
+        generate_function = third.make_generate_function(mutation_range,
+            mutation_rate, cf)
+        halt_function = third.make_halt_function(cf)
 
-    start_population = module.create_population(population_size, cf)
-    fitness_function = module.make_fitness_function(cf)
-    generate_function = module.make_generate_function(mutation_range,
-        mutation_rate, cf)
     ga = ga.genetic_algorithm(start_population, fitness_function,
-        generate_function, first.halt)
+        generate_function, halt_function)
     fitness = 0.0
+
+    counter = 0
     for generation in ga:
+        counter += 1
         fitness = generation[0].fitness
-        print fitness
+        print "--- Generation %d ---" % counter
         print generation[0]
+        print fitness
     with open('%s.ly' % output, 'w') as output:
         output.write(lilypond.render(species, cf, generation[0].chromosome))

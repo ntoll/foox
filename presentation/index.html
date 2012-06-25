@@ -276,38 +276,65 @@
                     </section>
                 </section>
                 <section>
-                    <h1>How can I use Fux's species to make computer generated counterpoint?</h1>
+                    <section>
+                        <h1>How can I use Fux's species to make computer generated counterpoint?</h1>
+                    </section>
+                    <section>
+                        <h2>The Problem:</h2>
+                        <ul>
+                            <li class="fragment">Silly/huge number of potential results.</li>
+                            <li class="fragment">Needle in a haystack (most potential results wrong).</li>
+                            <li class="fragment">Generating solutions algorithmically is hard.</li>
+                        </ul>
+                        <p class="fragment">Furthermore, any solution should be:</p>
+                        <ul>
+                            <li class="fragment">Timely (take less time than a practiced human).</li>
+                            <li class="fragment">Creative (sound like it could have been written by a human).</li>
+                            <li class="fragment"><q>Acceptable</q> (fooling most people most of the time).</li>
+                        </ul>
+                    </section>
                 </section>
                 <section>
-                    <h1>With a genetic algorithm!</h1>
+                    <h1>genetic algorithms!</h1>
+                    <ul>
+                        <li class="fragment"><q>Find</q> acceptable solutions relatively quickly.</li>
+                        <li class="fragment">Use evolutionary processes to <q>explore</q> the candidate solutions.</li>
+                        <li class="fragment">Are damn interesting...</li>
+                    </ul>
                     <p class="fragment">Hey presto! Foox is born (geddit?)</p>
                 </section>
                 <section>
-                    <h2>How does it work?</h2>
-                    <pre><code contenteditable class="python">
-def genetic_algorithm(population, fitness, generate, halt):
-    """
-    A generator that yields a list of genomes ordered by fitness (descending).
-    Each yielded list represents a generation in the execution of the genetic
-    algorithm.
+                    <section>
+                        <h2>How does it work?</h2>
+                        <img src="assets/images/genetic_algorithm.png"/>
+                    </section>
+                    <section>
+                        <h2>How does it work?</h2>
+                        <pre><code contenteditable class="python">
+    def genetic_algorithm(population, fitness, generate, halt):
+        """
+        A generator that yields a list of genomes ordered by fitness (descending).
+        Each yielded list represents a generation in the execution of the genetic
+        algorithm.
 
-    @param population: the starting population of genomes.
-    @param fitness: a function which given a genome will return a fitness
-        score.
-    @param generate: a function that produces offspring genomes for the next
-        generation.
-    @param halt: a function to test if the genetic algorithm should stop.
-    """
-    current_population = sorted(population, key=fitness, reverse=True)
-    generation_count = 1
-    yield current_population
-    while not halt(current_population, generation_count):
-        generation_count += 1
-        new_generation = generate(current_population)
-        current_population = sorted(new_generation, key=fitness, reverse=True)
+        @param population: the starting population of genomes.
+        @param fitness: a function which given a genome will return a fitness
+            score.
+        @param generate: a function that produces offspring genomes for the next
+            generation.
+        @param halt: a function to test if the genetic algorithm should stop.
+        """
+        current_population = sorted(population, key=fitness, reverse=True)
+        generation_count = 1
         yield current_population
+        while not halt(current_population, generation_count):
+            generation_count += 1
+            new_generation = generate(current_population)
+            current_population = sorted(new_generation, key=fitness, reverse=True)
+            yield current_population
 
-</code></pre>
+    </code></pre>
+                    </section>
                 </section>
                 <section>
                     <h2>Wordolution: An example / detour</h2>
@@ -330,6 +357,33 @@ lat 2
 cat 3
                     </code></pre>
                     <p>(A truncated evolution of <q>cat</q>)</p>
+                </section>
+                <section>
+                    <p>The fitness of a candidate solution is based upon its
+                    Levenshtein distance (number of different characters) from
+                    the target word.</p>
+                    <pre><code contenteditable class="python">
+def make_fitness_function(word):
+    """
+    Given the target word, will return a function that takes a single Genome
+    instance and returns a fitness score (based upon its Levenshtein distance).
+    """
+
+    word_len = len(word)
+
+    def fitness_function(genome):
+        """
+        Returns the fitness score of the genome.
+        """
+        if genome.fitness:
+            return genome.fitness
+
+        genome.fitness = abs(word_len -
+            levenshtein(word, ''.join(genome.chromosome)))
+        return genome.fitness
+
+    return fitness_function
+                    </code></pre>
                 </section>
                 <section>
                     <section>
@@ -421,33 +475,6 @@ cat 3
                         <code>mutation_rate</code> chance of changing a letter at
                         random.</p>
                     </section>
-                </section>
-                <section>
-                    <p>The fitness of a candidate solution is based upon its
-                    Levenshtein distance (number of different characters) from
-                    the target word.</p>
-                    <pre><code contenteditable class="python">
-def make_fitness_function(word):
-    """
-    Given the target word, will return a function that takes a single Genome
-    instance and returns a fitness score (based upon its Levenshtein distance).
-    """
-
-    word_len = len(word)
-
-    def fitness_function(genome):
-        """
-        Returns the fitness score of the genome.
-        """
-        if genome.fitness:
-            return genome.fitness
-
-        genome.fitness = abs(word_len -
-            levenshtein(word, ''.join(genome.chromosome)))
-        return genome.fitness
-
-    return fitness_function
-                    </code></pre>
                 </section>
                 <section>
                     <section>
@@ -712,7 +739,15 @@ optional arguments:
                     </section>
                     <section>
                         <h2>Results</h2>
-
+                        <img src="assets/images/second_foox.png"/>
+                        <audio src="assets/midi/second_foox.ogg" preload="auto" controls></audio>
+                        <img src="assets/images/second_mozart.png"/>
+                        <audio src="assets/midi/second_mozart.ogg" preload="auto" controls></audio>
+                    </section>
+                    <section>
+                        <h2>Results</h2>
+                        <p><img src="assets/images/python_avatar.png"/></p>
+                        <p><img src="assets/images/mozart_avatar.jpg"/></p>
                     </section>
                 </section>
                 <section>
@@ -746,9 +781,25 @@ optional arguments:
                         </table>
                     </section>
                     <section>
-                        <h2>Results</h2>
-
+                        <img src="assets/images/third_fux.png"/>
+                        <audio src="assets/midi/third_fux.ogg" preload="auto" controls></audio>
+                        <img src="assets/images/third_foox.png"/>
+                        <audio src="assets/midi/third_foox.ogg" preload="auto" controls></audio>
                     </section>
+                    <section>
+                        <h2>Results</h2>
+                        <p><img src="assets/images/fux_avatar.jpg"/></p>
+                        <p><img src="assets/images/python_avatar.png"/></p>
+                    </section>
+                </section>
+                <section>
+                    <h1>That's as far as I've got</h1>
+                    <p>Fourth species should be finished by Europython. Fifth species is basically impossible (but I'll try anyway).</p>
+                    <p><img src="assets/images/fifth.gif"/></p>
+                    <audio src="assets/midi/fifth.ogg" preload="auto" controls></audio>
+                </section>
+                <section>
+                    <h1>Questions..?</h1>
                 </section>
                 <section>
                     <h1>Image Credits</h1>

@@ -7,6 +7,12 @@ import foox.ga as ga
 from utils import is_parallel, make_generate_function
 
 
+# Some sane defaults.
+DEFAULT_POPULATION_SIZE = 1000
+DEFAULT_MAX_GENERATION = 100
+DEFAULT_MUTATION_RANGE = 7
+DEFAULT_MUTATION_RATE = 0.4
+
 # Intervals between notes that are allowed in first sepcies counterpoint.
 VALID_INTERVALS = [2, 4, 5, 7, 9, 11]
 
@@ -217,7 +223,8 @@ def halt(population, generation_count):
     """
     # All four required fingerprints exist in a solution that has not been
     # punished by for over-use of thirds, sixths, parallel motion etc.
-    return population[0].fitness >= MAX_REWARD or generation_count > 100
+    return (population[0].fitness >= MAX_REWARD or
+        generation_count > DEFAULT_MAX_GENERATION)
 
 
 class Genome(ga.Genome):

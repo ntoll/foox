@@ -1,8 +1,8 @@
 """
-Tests for the module that encompasses second species counterpoint.
+Tests for the module that encompasses third species counterpoint.
 """
 import unittest
-from foox.species.second import (Genome, create_population, is_parallel,
+from foox.species.third import (Genome, create_population, is_parallel,
     make_fitness_function, make_generate_function, make_halt_function,
     MAX_REWARD, REWARD_STEPWISE_MOTION)
 
@@ -35,25 +35,25 @@ class TestCreatePopulation(unittest.TestCase):
         """
         Tests that only valid consonant intervals are used.
         """
-        valid_first_beat_intervals = [2, 4, 5, 7, 9, 11]
-        valid_third_beat_intervals = valid_first_beat_intervals + [3, 6, 8, 10]
+        valid_even_beat_intervals = [2, 4, 5, 7, 9, 11]
+        valid_odd_beat_intervals = valid_even_beat_intervals + [3, 6, 8, 10]
         result = create_population(20, CANTUS_FIRMUS)
         for genome in result:
             for i in range(len(genome.chromosome)):
                 contrapunctus_note = genome.chromosome[i]
-                cantus_firmus_note = CANTUS_FIRMUS[i/2]
+                cantus_firmus_note = CANTUS_FIRMUS[i/4]
                 interval = contrapunctus_note - cantus_firmus_note
                 if i % 2:
-                    self.assertIn(interval, valid_third_beat_intervals)
+                    self.assertIn(interval, valid_odd_beat_intervals)
                 else:
-                    self.assertIn(interval, valid_first_beat_intervals)
+                    self.assertIn(interval, valid_even_beat_intervals)
 
     def test_solutions_have_correct_number_of_notes(self):
         """
         Ensures that all solutions have the expected number of notes.
         """
         result = create_population(20, CANTUS_FIRMUS)
-        expected_length = (len(CANTUS_FIRMUS) * 2) - 1
+        expected_length = (len(CANTUS_FIRMUS) * 4) - 3
         for genome in result:
             self.assertEqual(expected_length, len(genome.chromosome))
 
@@ -114,7 +114,7 @@ class TestHalt(unittest.TestCase):
         Ensure the function returns true if we're in a halting state.
         """
         halt = make_halt_function([6, 5])
-        g1 = Genome([6, 6, 5])
+        g1 = Genome([6, 6, 6, 6, 5])
         g1.fitness = MAX_REWARD
         population = [g1, ]
         result = halt(population, 1)
@@ -127,7 +127,7 @@ class TestHalt(unittest.TestCase):
         (rewarded because they're part of a valid step wise motion).
         """
         halt = make_halt_function([6, 5])
-        g1 = Genome([9, 9, 12])
+        g1 = Genome([8, 9, 9, 11, 12])
         # only one our of two "correct" dissonances
         g1.fitness = MAX_REWARD + REWARD_STEPWISE_MOTION
         population = [g1, ]
