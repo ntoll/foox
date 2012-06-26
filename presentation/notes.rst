@@ -15,6 +15,20 @@ an exploration of genetic algorithms (the technique I used to solve the
 problems) and finish by comparing computer generated output with solutions
 from the composers Johan Joseph Fux and Wolfgang Amadeus Mozart.
 
+The only assumption I'm making is that you're familiar with Python. However, it
+would be helpful to me if I could find out how "musical" you guys think you are.
+
+Hands up if you're:
+
+* Tone deaf, can't tell the difference between a lawnmower and saxophone.
+* Someone who enjoys listening to music but doesn't know anything about what
+you're listening to.
+* Someone with some sort of basic musical training - perhaps piano lessons when
+you were a kid.
+* A serious amateur musician who knows music.
+* The result of an extensive musical education perhaps culminating with time
+spent at a world class conservatoire such as the Royal College of Music.
+
 ----
 
 First, let's explore the musical aspects of the problem. Here are two
