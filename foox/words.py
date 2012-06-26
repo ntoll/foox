@@ -87,11 +87,11 @@ def make_generate_function(mutation_range, mutation_rate, word):
         """
         length = len(seed_generation)
         # Keep the fittest 50%
-        new_generation = seed_generation[:length/2]
+        new_generation = seed_generation[:length / 2]
 
         # Breed the remaining 50% using roulette wheel selection
         offspring = []
-        while len(offspring) < length/2:
+        while len(offspring) < length / 2:
             mum = ga.roulette_wheel_selection(seed_generation)
             dad = ga.roulette_wheel_selection(seed_generation)
             children = mum.breed(dad)
@@ -135,4 +135,5 @@ class Genome(ga.Genome):
                 # Verbose, but correctly named for clarity.
                 new_allele = random.choice(LETTERS)
                 self.chromosome[locus] = new_allele
-                self.fitness = None # force recalculation of fitness
+                # force recalculation of fitness
+                self.fitness = None

@@ -5,6 +5,7 @@ initial test suite works as expected.
 from foox.version import VERSION, get_version
 import unittest
 
+
 class TestVersion(unittest.TestCase):
     """
     Ensures the foox.version module works as expected.

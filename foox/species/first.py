@@ -54,6 +54,7 @@ PUNISH_LEAPS = 0.1
 MAX_REWARD = (REWARD_FIRST + REWARD_LAST + REWARD_LAST_STEP +
     REWARD_LAST_MOTION + REWARD_PENULTIMATE_PREPARATION)
 
+
 def create_population(number, cantus_firmus):
     """
     Will create a new list of random candidate solutions of the specified
@@ -66,7 +67,7 @@ def create_population(number, cantus_firmus):
             valid_range = [interval for interval in
                 VALID_INTERVALS if (interval + note) < 17]
             interval = random.choice(valid_range)
-            new_chromosome.append(note+interval)
+            new_chromosome.append(note + interval)
         genome = Genome(new_chromosome)
         result.append(genome)
     return result
@@ -77,11 +78,9 @@ def make_fitness_function(cantus_firmus):
     Given the cantus firmus, will return a function that takes a single Genome
     instance and returns a fitness score.
     """
-
     # Melody wide measures.
     repeat_threshold = len(cantus_firmus) * 0.5
     jump_threshold = len(cantus_firmus) * 0.3
-
 
     def fitness_function(genome):
         """
@@ -89,9 +88,8 @@ def make_fitness_function(cantus_firmus):
         the cantus_firmus in this closure. Caches the fitness score in the
         genome.
         """
-
         # Save some time!
-        if genome.fitness != None:
+        if genome.fitness is not None:
             return genome.fitness
 
         # The fitness score to be returned.
@@ -187,7 +185,6 @@ def make_fitness_function(cantus_firmus):
             last_notes = current_notes
             last_interval = current_interval
 
-
         # Punish too many (> 1/3) repeated notes.
         if repeats > repeat_threshold:
             fitness_score -= PUNISH_REPEATS
@@ -249,4 +246,5 @@ class Genome(ga.Genome):
                 mutation = random.choice(valid_mutation_range)
                 new_allele = cantus_firmus_note + mutation
                 self.chromosome[locus] = new_allele
-                self.fitness = None # Resets fitness score
+                # Resets fitness score
+                self.fitness = None

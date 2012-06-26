@@ -87,6 +87,7 @@ NOTES = {
     17: "r",
 }
 
+
 def get_cantus_firmus(notes):
     """
     Given a list of notes as integers, will return the lilypond notes
@@ -106,6 +107,7 @@ def get_cantus_firmus(notes):
     # Tidy up double spaces.
     result = result.replace('  ', ' ')
     return result
+
 
 def get_contrapunctus(notes, duration):
     """
@@ -144,6 +146,7 @@ def get_contrapunctus(notes, duration):
     # Tidy up double spaces.
     result = result.replace('  ', ' ')
     return result
+
 
 def render(species, cantus_firmus, contrapunctus, title='Untitled',
     created_on=None, composer='Anonymous'):

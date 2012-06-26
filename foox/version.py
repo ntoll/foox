@@ -6,6 +6,7 @@ how Django (http://djangoproject.com/) does it. ;-)
 # MAJOR, MINOR, RELEASE, STATUS [alpha, beta, final], VERSION
 VERSION = (0, 0, 0, 'alpha', 0)
 
+
 def get_version():
     """
     Returns a string version of VERSION

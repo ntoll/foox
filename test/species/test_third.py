@@ -41,7 +41,7 @@ class TestCreatePopulation(unittest.TestCase):
         for genome in result:
             for i in range(len(genome.chromosome)):
                 contrapunctus_note = genome.chromosome[i]
-                cantus_firmus_note = CANTUS_FIRMUS[i/4]
+                cantus_firmus_note = CANTUS_FIRMUS[i / 4]
                 interval = contrapunctus_note - cantus_firmus_note
                 if i % 2:
                     self.assertIn(interval, valid_odd_beat_intervals)
@@ -177,8 +177,10 @@ class TestGenome(unittest.TestCase):
         firmus.
         """
         cantus_firmus = [1, 1, 1, 1, 1]
-        mutation_rate = 1 # mutate every time.
-        mutation_range = 2 # will always mutate to thirds above the cf note.
+        # mutate every time.
+        mutation_rate = 1
+        # will always mutate to thirds above the cf note.
+        mutation_range = 2
         genome = Genome([5, 6, 7, 8, 9])
         genome.mutate(mutation_range, mutation_rate, cantus_firmus)
         self.assertEqual([3, 3, 3, 3, 3], genome.chromosome)

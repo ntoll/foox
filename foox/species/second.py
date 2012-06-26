@@ -22,7 +22,7 @@ VALID_THIRD_BEAT_INTERVALS = CONSONANCES + DISSONANCES
 # Various rewards and punishments used with different aspects of the solution.
 
 # Reward / punishment to ensure the solution starts correctly (5th or 8ve).
-REWARD_FIRST =2
+REWARD_FIRST = 2
 PUNISH_FIRST = 0.7
 # Reward / punishment to ensure the solution finishes correctly (at an 8ve).
 REWARD_LAST = 4
@@ -56,6 +56,7 @@ PUNISH_LEAPS = 0.1
 MAX_REWARD = (REWARD_FIRST + REWARD_LAST + REWARD_LAST_STEP +
     REWARD_LAST_MOTION + REWARD_PENULTIMATE_PREPARATION)
 
+
 def create_population(number, cantus_firmus):
     """
     Will create a new list of random candidate solutions of the specified
@@ -71,8 +72,8 @@ def create_population(number, cantus_firmus):
                 VALID_THIRD_BEAT_INTERVALS if (interval + note) < 17]
             first_beat_interval = random.choice(valid_first_beat_range)
             third_beat_interval = random.choice(valid_third_beat_range)
-            new_chromosome.append(note+first_beat_interval)
-            new_chromosome.append(note+third_beat_interval)
+            new_chromosome.append(note + first_beat_interval)
+            new_chromosome.append(note + third_beat_interval)
         # Remove the last minim since it's surplus to requirements.
         genome = Genome(new_chromosome[:-1])
         result.append(genome)
@@ -88,17 +89,14 @@ def make_fitness_function(cantus_firmus):
     # Melody wide measures.
     repeat_threshold = len(cantus_firmus) * 0.5
     jump_threshold = len(cantus_firmus) * 0.3
-
-
     def fitness_function(genome):
         """
         Given a candidate solution will return its fitness score assuming
         the cantus_firmus in this closure. Caches the fitness score in the
         genome.
         """
-
         # Save some time!
-        if genome.fitness != None:
+        if genome.fitness is not None:
             return genome.fitness
 
         # The fitness score to be returned.
@@ -158,7 +156,7 @@ def make_fitness_function(cantus_firmus):
         last_interval = last_notes[0] - last_notes[1]
         for i in range(1, len(contrapunctus)):
             contrapunctus_note = contrapunctus[i]
-            cantus_firmus_note = cantus_firmus[i/2]
+            cantus_firmus_note = cantus_firmus[i / 2]
             current_notes = (contrapunctus_note, cantus_firmus_note)
             current_interval = contrapunctus_note - cantus_firmus_note
 
@@ -229,7 +227,7 @@ def make_halt_function(cantus_firmus):
         for i in range(len(fittest.chromosome)):
             # Check for dissonances. Each dissonance should have incremented
             # the fitness because it has been "placed" correctly.
-            cantus_firmus_note = cantus_firmus[i/2]
+            cantus_firmus_note = cantus_firmus[i / 2]
             melody_note = fittest.chromosome[i]
             interval = melody_note - cantus_firmus_note
             if interval in DISSONANCES:
@@ -258,7 +256,7 @@ class Genome(ga.Genome):
             VALID_THIRD_BEAT_INTERVALS if interval <= mutation_range]
         for locus in range(len(self.chromosome)):
             if mutation_rate >= random.random():
-                cantus_firmus_note = context[locus/2]
+                cantus_firmus_note = context[locus / 2]
                 if locus % 2:
                     # Current melody note is on the third beat of the bar
                     mutation_intervals = third_beat_mutation_intervals
@@ -271,4 +269,5 @@ class Genome(ga.Genome):
                 mutation = random.choice(valid_mutation_range)
                 new_allele = cantus_firmus_note + mutation
                 self.chromosome[locus] = new_allele
-                self.fitness = None # Resets fitness score
+                # Resets fitness score
+                self.fitness = None

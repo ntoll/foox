@@ -6,6 +6,7 @@ import datetime
 
 from foox.lilypond import get_cantus_firmus, get_contrapunctus, render
 
+
 class TestLilypond(unittest.TestCase):
     """
     Ensures the foox.lilypond module works as expected.

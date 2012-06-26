@@ -98,7 +98,8 @@ class Genome(object):
         solution itself is called a genome (hence the name of this class).
         """
         self.chromosome = chromosome
-        self.fitness = None # Denotes unknown. Set by the fitness function.
+        # Denotes unknown. Set by the fitness function.
+        self.fitness = None
 
     def breed(self, other):
         """

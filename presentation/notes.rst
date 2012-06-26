@@ -20,7 +20,7 @@ would be helpful to me if I could find out how "musical" you guys think you are.
 
 Hands up if you're:
 
-* Tone deaf, can't tell the difference between a lawnmower and saxophone.
+* Tone deaf, can't tell the difference between a lawn mower and saxophone.
 * Someone who enjoys listening to music but doesn't know anything about what
 you're listening to.
 * Someone with some sort of basic musical training - perhaps piano lessons when
@@ -75,7 +75,7 @@ called "counterpoint".
 ----
 
 I want you to get a flavour of the intricacies of counterpoint so I'm going to
-play the music two more times. On this occassion I want you to pick a part (it
+play the music two more times. On this occasion I want you to pick a part (it
 doesn't matter which) and try to follow it while also attempting to listen to
 the piece as a whole. Concentrate on the contour of the melody. Try to get a
 feel of where it moves (higher or lower) and how it moves (by step or by jump).
@@ -185,7 +185,7 @@ I played at the start of this presentation.
 
 ----
 
-The cantus firmus is basically a medieval hymn tune based on plainchant. This
+The cantus firmus is basically a medieval hymn tune based on plain chant. This
 is the cantus firmus that Fux uses throughout Gradus ad Parnassum.
 
 ----

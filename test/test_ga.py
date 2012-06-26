@@ -7,6 +7,7 @@ from mock import MagicMock, patch
 from foox.ga import (genetic_algorithm, roulette_wheel_selection, crossover,
     Genome)
 
+
 class TestGeneticAlgorithm(unittest.TestCase):
     """
     Ensures the genetic_algorithm generator function works as expected.
@@ -54,8 +55,8 @@ class TestGeneticAlgorithm(unittest.TestCase):
 
     def test_halt_function(self):
         """
-        Ensures that the halt function is called for all subsequent yields after
-        yielding the starting population.
+        Ensures that the halt function is called for all subsequent yields
+        after yielding the starting population.
         """
         start_pop = [1, 2, 3]
 
@@ -137,7 +138,7 @@ class TestGeneticAlgorithm(unittest.TestCase):
 
         ga = genetic_algorithm(start_pop, fitness, Generate, halt)
         actual = [p for p in ga]
-        expected = [[3+i, 2+i, 1+i] for i in range(10)]
+        expected = [[3 + i, 2 + i, 1 + i] for i in range(10)]
         self.assertEqual(actual, expected,
             "Actual: %r Expected: %r" % (actual, expected))
 

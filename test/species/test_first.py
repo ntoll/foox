@@ -112,7 +112,8 @@ class TestHalt(unittest.TestCase):
 
     def test_halt_not(self):
         """
-        Ensures if the fittest genome has fitness < 4 then halt doesn't succeed.
+        Ensures if the fittest genome has fitness < 4 then halt doesn't
+        succeed.
         """
         g1 = Genome([1, 2, 3])
         g1.fitness = MAX_REWARD - 0.1
