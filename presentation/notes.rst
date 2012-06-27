@@ -21,13 +21,10 @@ would be helpful to me if I could find out how "musical" you guys think you are.
 Hands up if you're:
 
 * Tone deaf, can't tell the difference between a lawn mower and saxophone.
-* Someone who enjoys listening to music but doesn't know anything about what
-you're listening to.
-* Someone with some sort of basic musical training - perhaps piano lessons when
-you were a kid.
+* Someone who enjoys listening to music but doesn't know anything about what you're listening to.
+* Someone with some sort of basic musical training - perhaps piano lessons when you were a kid.
 * A serious amateur musician who knows music.
-* The result of an extensive musical education perhaps culminating with time
-spent at a world class conservatoire such as the Royal College of Music.
+* The result of an extensive musical education perhaps culminating with time spent at a world class conservatoire such as the Royal College of Music.
 
 ----
 
