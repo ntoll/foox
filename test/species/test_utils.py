@@ -4,7 +4,7 @@ Tests the common utility functions found in the utils module.
 import unittest
 
 from foox.species.utils import (is_parallel, make_generate_function,
-    is_stepwise_motion)
+    is_stepwise_motion, is_suspension)
 from foox.ga import Genome
 
 
@@ -150,3 +150,37 @@ class TestGenerateFunction(unittest.TestCase):
         seed_population = [g1, g2, g3]
         result = generate_function(seed_population)
         self.assertTrue(3, len(result))
+
+class TestIsSuspension(unittest.TestCase):
+    """
+    Ensures that a note is correctly identified as being part of a valid
+    suspension (dissonance resolving onto a consonance).
+    """
+
+    def test_four_three_suspension(self):
+        """
+        Test a 4/3 suspension is correction identified.
+        """
+        cantus_firmus = [7, 6, 5]
+        melody = [9, 8, 7]
+        position = 0
+        self.assertTrue(is_suspension(melody, position, cantus_firmus))
+
+    def test_seven_six_suspension(self):
+        """
+        Test a 7/6 suspension is correction identified.
+        """
+        cantus_firmus = [7, 6, 5]
+        melody = [12, 11, 10]
+        position = 0
+        self.assertTrue(is_suspension(melody, position, cantus_firmus))
+
+    def test_suspension_with_no_suspension(self):
+        """
+        If the note isn't part of a suspension the function should return
+        false.
+        """
+        cantus_firmus = [7, 6, 5]
+        melody = [11, 11, 10]
+        position = 0
+        self.assertFalse(is_suspension(melody, position, cantus_firmus))

@@ -373,8 +373,11 @@ Species 3.
 
 ----
 
-Unfortunately, this is as far as I've got. Fourth species counterpoint is
-almost done, but fifth species is quite a way off.
+Species 4.
+
+----
+
+Unfortunately, this is as far as I've got. Fifth species is quite a way off.
 
 ----
 

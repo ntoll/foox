@@ -65,3 +65,21 @@ def make_generate_function(mutation_range, mutation_rate, cantus_firmus):
         return new_generation
 
     return generate
+
+
+def is_suspension(melody, position, cantus_firmus):
+    """
+    Returns true if the note in the melody at the specified position is part of
+    a correctly formed suspension (dissonance resolving by step onto a
+    consonance)
+    """
+    current_note = melody[position]
+    resolution_note = melody[position + 1]
+    cantus_firmus_note = cantus_firmus[position + 1]
+    suspension_interval = current_note - cantus_firmus_note
+    resolution_interval = resolution_note - cantus_firmus_note
+    if suspension_interval == 3 and resolution_interval == 2:
+        return True
+    if suspension_interval == 6 and resolution_interval == 5:
+        return True
+    return False
