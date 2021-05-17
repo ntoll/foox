@@ -93,19 +93,19 @@ def get_cantus_firmus(notes):
     Given a list of notes as integers, will return the lilypond notes
     for the cantus firmus.
     """
-    result = ''
+    result = ""
     # Ensure the notes are in range
     normalised = [note for note in notes if note > 0 and note < 18]
     if not normalised:
         return result
     # Set the duration against the first note.
-    result = NOTES[normalised[0]] + ' 1 '
+    result = NOTES[normalised[0]] + " 1 "
     # Translate all the others.
-    result += ' '.join([NOTES[note] for note in normalised[1:]])
+    result += " ".join([NOTES[note] for note in normalised[1:]])
     # End with a double bar.
     result += ' \\bar "|."'
     # Tidy up double spaces.
-    result = result.replace('  ', ' ')
+    result = result.replace("  ", " ")
     return result
 
 
@@ -116,15 +116,15 @@ def get_simple_contrapunctus(notes, duration):
 
     Durations: 1-semibreve, 2-minim, 4-crotchet
     """
-    result = ''
+    result = ""
     # Ensure the notes are in range
     normalised = [note for note in notes if note > 0 and note < 18]
     if not normalised:
         return result
     # Set the duration against the first note.
-    result = NOTES[normalised[0]] + ' %d ' % duration
+    result = NOTES[normalised[0]] + " %d " % duration
     # Translate all the others except the final two.
-    result += ' '.join([NOTES[note] for note in normalised[1:-2]])
+    result += " ".join([NOTES[note] for note in normalised[1:-2]])
 
     # Ensure the penultimate note is a semitone away IFF moving up to the final
     # note. (Kinda hacky - would be easier in Lisp)
@@ -135,16 +135,16 @@ def get_simple_contrapunctus(notes, duration):
         # Check if the note isn't a C or an F
         if final_note not in [4, 7, 11, 14]:
             # insert 'is' to sharpen the pitch of the note by a semitone.
-            next_note = next_note[0] + 'is' + next_note[1:]
-    result += ' ' + next_note
+            next_note = next_note[0] + "is" + next_note[1:]
+    result += " " + next_note
 
     # Ensure the final note is a semibreve.
-    result += ' ' + NOTES[final_note]
+    result += " " + NOTES[final_note]
     if duration != 1:
-        result += ' 1'
+        result += " 1"
 
     # Tidy up double spaces.
-    result = result.replace('  ', ' ')
+    result = result.replace("  ", " ")
     return result
 
 
@@ -154,19 +154,19 @@ def get_fourth_species(notes):
     counterpoint in numeric (foox) form, turns it into correct Lilypond
     notation.
     """
-    result = ''
+    result = ""
     # Ensure the notes are in range
     normalised = [note for note in notes if note > 0 and note < 18]
     if not normalised:
         return result
 
     # Fourth species starts with two beats rest.
-    result = 'r2 '
+    result = "r2 "
 
     # Translate all the others except the final two.
     body = [NOTES[note] for note in normalised[:-2]]
     for pitch in body:
-        result += '%s~ %s ' % (pitch, pitch)
+        result += "%s~ %s " % (pitch, pitch)
 
     # Ensure the penultimate note is a semitone away IFF moving up to the final
     # note. (Kinda hacky - would be easier in Lisp)
@@ -177,19 +177,25 @@ def get_fourth_species(notes):
         # Check if the note isn't a C or an F
         if final_note not in [4, 7, 11, 14]:
             # insert 'is' to sharpen the pitch of the note by a semitone.
-            next_note = next_note[0] + 'is' + next_note[1:]
-    result += ' ' + next_note
+            next_note = next_note[0] + "is" + next_note[1:]
+    result += " " + next_note
 
     # Ensure the final note is a semibreve.
-    result += ' %s 1' % (NOTES[final_note])
+    result += " %s 1" % (NOTES[final_note])
 
     # Tidy up double spaces.
-    result = result.replace('  ', ' ')
+    result = result.replace("  ", " ")
     return result
 
 
-def render(species, cantus_firmus, contrapunctus, title='Untitled',
-    created_on=None, composer='Anonymous'):
+def render(
+    species,
+    cantus_firmus,
+    contrapunctus,
+    title="Untitled",
+    created_on=None,
+    composer="Anonymous",
+):
     """
     Given an indication of the species (1-3), a list of notes for the
     cantus_firmus and contrapunctus returns a string containing lilypond code
@@ -198,7 +204,7 @@ def render(species, cantus_firmus, contrapunctus, title='Untitled',
     if not created_on:
         created_on = datetime.datetime.today()
 
-    contrapunctus_notes = ''
+    contrapunctus_notes = ""
     if species < 4:
         duration = SPECIES_DURATION[species]
         contrapunctus_notes = get_simple_contrapunctus(contrapunctus, duration)
@@ -206,14 +212,14 @@ def render(species, cantus_firmus, contrapunctus, title='Untitled',
         contrapunctus_notes = get_fourth_species(contrapunctus)
 
     context = {}
-    context['title'] = title
-    context['created_on'] = created_on.strftime('%c')
-    context['composer'] = composer
-    context['contrapunctus'] = contrapunctus_notes
-    context['cantus_firmus'] = get_cantus_firmus(cantus_firmus)
+    context["title"] = title
+    context["created_on"] = created_on.strftime("%c")
+    context["composer"] = composer
+    context["contrapunctus"] = contrapunctus_notes
+    context["cantus_firmus"] = get_cantus_firmus(cantus_firmus)
     # Sanity check...
-    if context['contrapunctus'] and context['cantus_firmus']:
+    if context["contrapunctus"] and context["cantus_firmus"]:
         score = Template(TEMPLATE)
         return score.substitute(context)
     else:
-        return ''
+        return ""

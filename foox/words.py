@@ -39,7 +39,7 @@ def levenshtein(s1, s2):
         return levenshtein(s2, s1)
     if not s1:
         return len(s2)
-    previous_row = xrange(len(s2) + 1)
+    previous_row = range(len(s2) + 1)
     for i, c1 in enumerate(s1):
         current_row = [i + 1]
         for j, c2 in enumerate(s2):
@@ -68,8 +68,9 @@ def make_fitness_function(word):
         if genome.fitness:
             return genome.fitness
 
-        genome.fitness = abs(word_len -
-            levenshtein(word, ''.join(genome.chromosome)))
+        genome.fitness = abs(
+            word_len - levenshtein(word, "".join(genome.chromosome))
+        )
         return genome.fitness
 
     return fitness_function
@@ -87,7 +88,7 @@ def make_generate_function(mutation_range, mutation_rate, word):
         """
         length = len(seed_generation)
         # Keep the fittest 50%
-        new_generation = seed_generation[:length / 2]
+        new_generation = seed_generation[: length // 2]
 
         # Breed the remaining 50% using roulette wheel selection
         offspring = []

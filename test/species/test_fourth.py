@@ -2,9 +2,16 @@
 Tests for the module that encompasses fourth species counterpoint.
 """
 import unittest
-from foox.species.fourth import (Genome, create_population, is_parallel,
-    make_fitness_function, make_generate_function, make_halt_function,
-    MAX_REWARD, REWARD_SUSPENSION)
+from foox.species.fourth import (
+    Genome,
+    create_population,
+    is_parallel,
+    make_fitness_function,
+    make_generate_function,
+    make_halt_function,
+    MAX_REWARD,
+    REWARD_SUSPENSION,
+)
 from foox.species.utils import is_suspension
 
 
@@ -113,7 +120,9 @@ class TestHalt(unittest.TestCase):
         halt = make_halt_function([6, 5])
         g1 = Genome([6, 5])
         g1.fitness = MAX_REWARD
-        population = [g1, ]
+        population = [
+            g1,
+        ]
         result = halt(population, 1)
         self.assertTrue(result)
 
@@ -127,13 +136,17 @@ class TestHalt(unittest.TestCase):
         g1 = Genome([11, 10, 9, 8, 7])
         # only one our of two "correct" dissonances
         g1.fitness = MAX_REWARD + REWARD_SUSPENSION
-        population = [g1, ]
+        population = [
+            g1,
+        ]
         result = halt(population, 1)
         self.assertFalse(result)
         # Try again
         # two out of two "correct" dissonances
         g1.fitness = MAX_REWARD + (REWARD_SUSPENSION * 2)
-        population = [g1, ]
+        population = [
+            g1,
+        ]
         result = halt(population, 1)
         self.assertTrue(result)
 
@@ -181,4 +194,3 @@ class TestGenome(unittest.TestCase):
         genome = Genome([5, 6, 7, 8, 9])
         genome.mutate(mutation_range, mutation_rate, cantus_firmus)
         self.assertEqual([3, 3, 3, 3, 3], genome.chromosome)
-

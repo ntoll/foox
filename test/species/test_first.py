@@ -2,8 +2,15 @@
 Tests for the module that encompasses first species counterpoint.
 """
 import unittest
-from foox.species.first import (Genome, create_population, is_parallel,
-    make_fitness_function, make_generate_function, halt, MAX_REWARD)
+from foox.species.first import (
+    Genome,
+    create_population,
+    is_parallel,
+    make_fitness_function,
+    make_generate_function,
+    halt,
+    MAX_REWARD,
+)
 
 
 # The cantus firmus to use in the test suite.
@@ -146,8 +153,8 @@ class TestGenome(unittest.TestCase):
         firmus.
         """
         cantus_firmus = [1, 1, 1, 1, 1]
-        mutation_rate = 1 # mutate every time.
-        mutation_range = 2 # will always mutate to thirds above the cf note.
+        mutation_rate = 1  # mutate every time.
+        mutation_range = 2  # will always mutate to thirds above the cf note.
         genome = Genome([5, 6, 7, 8, 9])
         genome.mutate(mutation_range, mutation_rate, cantus_firmus)
         self.assertEqual([3, 3, 3, 3, 3], genome.chromosome)

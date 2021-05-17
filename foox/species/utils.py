@@ -21,9 +21,9 @@ def is_stepwise_motion(melody, position):
     Returns true if the note at position in the melody is in the middle of a
     step-wise movement in a single direction.
     """
-    pre_note = melody[position-1]
+    pre_note = melody[position - 1]
     note = melody[position]
-    post_note = melody[position+1]
+    post_note = melody[position + 1]
     step_to = abs(pre_note - note)
     step_from = abs(note - post_note)
     if step_to == 1 and step_from == 1:
@@ -44,11 +44,11 @@ def make_generate_function(mutation_range, mutation_rate, cantus_firmus):
         """
         length = len(seed_generation)
         # Keep the fittest 50%
-        new_generation = seed_generation[:length/2]
+        new_generation = seed_generation[: length // 2]
 
         # Breed the remaining 50% using roulette wheel selection
         offspring = []
-        while len(offspring) < length/2:
+        while len(offspring) < length / 2:
             mum = ga.roulette_wheel_selection(seed_generation)
             dad = ga.roulette_wheel_selection(seed_generation)
             children = mum.breed(dad)

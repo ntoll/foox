@@ -35,7 +35,7 @@ if __name__ == '__main__':
     ga = ga.genetic_algorithm(start_population, fitness_function,
         generate_function, words.halt)
     for generation in ga:
-        print [''.join(x.chromosome) for x in generation]
+        print([''.join(x.chromosome) for x in generation])
         fitness = generation[0].fitness
         w = ''.join(generation[0].chromosome)
-        print "%s %d" % (w, fitness)
+        print("%s %d" % (w, fitness))

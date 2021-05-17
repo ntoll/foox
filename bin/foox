@@ -80,8 +80,8 @@ if __name__ == '__main__':
     for generation in ga:
         counter += 1
         fitness = generation[0].fitness
-        print "--- Generation %d ---" % counter
-        print generation[0]
-        print fitness
+        print("--- Generation %d ---" % counter)
+        print(generation[0])
+        print(fitness)
     with open('%s.ly' % output, 'w') as output:
         output.write(lilypond.render(species, cf, generation[0].chromosome))

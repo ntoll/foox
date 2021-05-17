@@ -3,9 +3,13 @@ Tests for the ga (genetic algorithm) module
 """
 import unittest
 import random
-from mock import MagicMock, patch
-from foox.ga import (genetic_algorithm, roulette_wheel_selection, crossover,
-    Genome)
+from unittest.mock import MagicMock, patch
+from foox.ga import (
+    genetic_algorithm,
+    roulette_wheel_selection,
+    crossover,
+    Genome,
+)
 
 
 class TestGeneticAlgorithm(unittest.TestCase):
@@ -19,8 +23,11 @@ class TestGeneticAlgorithm(unittest.TestCase):
         """
         start_pop = [3, 2, 1]
         ga = genetic_algorithm(start_pop, None, None, None)
-        self.assertEqual(ga.next(), start_pop,
-            "Starting population not yielded as first result.")
+        self.assertEqual(
+            next(ga),
+            start_pop,
+            "Starting population not yielded as first result.",
+        )
 
     def test_fitness_called_for_starting_population(self):
         """
@@ -28,11 +35,14 @@ class TestGeneticAlgorithm(unittest.TestCase):
         yielding the starting population.
         """
         start_pop = [1, 2, 3]
-        mock_fitness = MagicMock(return_value=None)
+        mock_fitness = MagicMock(return_value=False)
         ga = genetic_algorithm(start_pop, mock_fitness, None, None)
-        result = ga.next()
-        self.assertEqual(len(start_pop), mock_fitness.call_count,
-            "Fitness function not called for each genome.")
+        result = next(ga)
+        self.assertEqual(
+            len(start_pop),
+            mock_fitness.call_count,
+            "Fitness function not called for each genome.",
+        )
 
     def test_starting_population_fitness_ordered(self):
         """
@@ -49,9 +59,10 @@ class TestGeneticAlgorithm(unittest.TestCase):
 
         ga = genetic_algorithm(start_pop, fitness, None, None)
         expected = [3, 2, 1]
-        actual = ga.next()
-        self.assertEqual(actual, expected,
-            "Actual: %r Expected: %r" % (actual, expected))
+        actual = next(ga)
+        self.assertEqual(
+            actual, expected, "Actual: %r Expected: %r" % (actual, expected)
+        )
 
     def test_halt_function(self):
         """
@@ -76,21 +87,23 @@ class TestGeneticAlgorithm(unittest.TestCase):
             """
             As simple as possible. See generate related test below.
             """
+
             def __init__(self, parents):
                 pass
 
             def __iter__(self):
                 return self
 
-            def next(self):
+            def __next__(self):
                 raise StopIteration()
 
         ga = genetic_algorithm(start_pop, fitness, Generate, halt)
         result = [p for p in ga]
         actual = len(result)
         expected = 10
-        self.assertEqual(actual, expected,
-            "Actual: %r Expected: %r" % (actual, expected))
+        self.assertEqual(
+            actual, expected, "Actual: %r Expected: %r" % (actual, expected)
+        )
 
     def test_generate(self):
         """
@@ -126,7 +139,7 @@ class TestGeneticAlgorithm(unittest.TestCase):
             def __iter__(self):
                 return self
 
-            def next(self):
+            def __next__(self):
                 """
                 For testing purposes only.
                 """
@@ -139,8 +152,9 @@ class TestGeneticAlgorithm(unittest.TestCase):
         ga = genetic_algorithm(start_pop, fitness, Generate, halt)
         actual = [p for p in ga]
         expected = [[3 + i, 2 + i, 1 + i] for i in range(10)]
-        self.assertEqual(actual, expected,
-            "Actual: %r Expected: %r" % (actual, expected))
+        self.assertEqual(
+            actual, expected, "Actual: %r Expected: %r" % (actual, expected)
+        )
 
 
 class TestRouletteWheelSelection(unittest.TestCase):
@@ -168,8 +182,11 @@ class TestRouletteWheelSelection(unittest.TestCase):
 
         population = [Genome(random.uniform(0.1, 10.0)) for i in range(4)]
         result = roulette_wheel_selection(population)
-        self.assertIsInstance(result, Genome,
-            "Expected result of roulette_wheel_selection is not a Genome")
+        self.assertIsInstance(
+            result,
+            Genome,
+            "Expected result of roulette_wheel_selection is not a Genome",
+        )
 
     def test_returns_genome_with_unfit_population(self):
         """
@@ -187,8 +204,11 @@ class TestRouletteWheelSelection(unittest.TestCase):
 
         population = [Genome(0.0) for i in range(4)]
         result = roulette_wheel_selection(population)
-        self.assertIsInstance(result, Genome,
-            "Expected result of roulette_wheel_selection is not a Genome")
+        self.assertIsInstance(
+            result,
+            Genome,
+            "Expected result of roulette_wheel_selection is not a Genome",
+        )
 
 
 class TestCrossover(unittest.TestCase):
@@ -208,10 +228,12 @@ class TestCrossover(unittest.TestCase):
         mum = Genome([1, 2, 3])
         dad = Genome([1, 2, 3])
         result = crossover(mum, dad, Genome)
-        self.assertEqual(mum, result[0],
-            "Child expected to be the same as parent.")
-        self.assertEqual(mum, result[0],
-            "Child expected to be the same as parent.")
+        self.assertEqual(
+            mum, result[0], "Child expected to be the same as parent."
+        )
+        self.assertEqual(
+            mum, result[0], "Child expected to be the same as parent."
+        )
 
     def test_creates_two_babies(self):
         """
@@ -219,17 +241,24 @@ class TestCrossover(unittest.TestCase):
         of an expected crossover.
         """
         mum = Genome([1, 2, 3, 4])
-        dad = Genome(['a', 'b', 'c', 'd'])
+        dad = Genome(["a", "b", "c", "d"])
+        random.seed(7)
         result = crossover(mum, dad, Genome)
         # There must be two children.
         self.assertEqual(2, len(result))
-        # The randint call in crossover will choose 2 given random.seed(5).
-        expected1 = Genome([1, 2, 'c', 'd'])
-        expected2 = Genome(['a', 'b', 3, 4])
-        self.assertEqual(expected1, result[0],
-            "Expected: %r Got: %r" % (expected1, result[0]))
-        self.assertEqual(expected2, result[1],
-            "Expected: %r Got: %r" % (expected2, result[1]))
+        # The randint call in crossover will choose 2 given random.seed(7).
+        expected1 = Genome([1, 2, "c", "d"])
+        expected2 = Genome(["a", "b", 3, 4])
+        self.assertEqual(
+            expected1,
+            result[0],
+            "Expected: %r Got: %r" % (expected1, result[0]),
+        )
+        self.assertEqual(
+            expected2,
+            result[1],
+            "Expected: %r Got: %r" % (expected2, result[1]),
+        )
 
 
 class TestGenome(unittest.TestCase):
@@ -255,14 +284,18 @@ class TestGenome(unittest.TestCase):
         the breed method.
         """
         x = Genome([1, 2, 3, 4])
-        mate = Genome(['a', 'b', 'c', 'd'])
-        mock_crossover = MagicMock(return_value=(Genome([1, 2, 'a', 'b']),
-            Genome(['a', 'b', 3, 4])))
+        mate = Genome(["a", "b", "c", "d"])
+        mock_crossover = MagicMock(
+            return_value=(Genome([1, 2, "a", "b"]), Genome(["a", "b", 3, 4]))
+        )
 
-        with patch('foox.ga.crossover', mock_crossover):
+        with patch("foox.ga.crossover", mock_crossover):
             x.breed(mate)
-        self.assertEqual(1, mock_crossover.call_count,
-            "Breed does not call crossover function expected number of times.")
+        self.assertEqual(
+            1,
+            mock_crossover.call_count,
+            "Breed does not call crossover function expected number of times.",
+        )
         mock_crossover.assert_called_with(x, mate, Genome)
 
     def test_mutate(self):

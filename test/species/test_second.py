@@ -2,9 +2,16 @@
 Tests for the module that encompasses second species counterpoint.
 """
 import unittest
-from foox.species.second import (Genome, create_population, is_parallel,
-    make_fitness_function, make_generate_function, make_halt_function,
-    MAX_REWARD, REWARD_STEPWISE_MOTION)
+from foox.species.second import (
+    Genome,
+    create_population,
+    is_parallel,
+    make_fitness_function,
+    make_generate_function,
+    make_halt_function,
+    MAX_REWARD,
+    REWARD_STEPWISE_MOTION,
+)
 
 
 # The cantus firmus to use in the test suite.
@@ -41,7 +48,7 @@ class TestCreatePopulation(unittest.TestCase):
         for genome in result:
             for i in range(len(genome.chromosome)):
                 contrapunctus_note = genome.chromosome[i]
-                cantus_firmus_note = CANTUS_FIRMUS[i / 2]
+                cantus_firmus_note = CANTUS_FIRMUS[i // 2]
                 interval = contrapunctus_note - cantus_firmus_note
                 if i % 2:
                     self.assertIn(interval, valid_third_beat_intervals)
@@ -116,7 +123,9 @@ class TestHalt(unittest.TestCase):
         halt = make_halt_function([6, 5])
         g1 = Genome([6, 6, 5])
         g1.fitness = MAX_REWARD
-        population = [g1, ]
+        population = [
+            g1,
+        ]
         result = halt(population, 1)
         self.assertTrue(result)
 
@@ -130,13 +139,17 @@ class TestHalt(unittest.TestCase):
         g1 = Genome([9, 9, 12])
         # only one our of two "correct" dissonances
         g1.fitness = MAX_REWARD + REWARD_STEPWISE_MOTION
-        population = [g1, ]
+        population = [
+            g1,
+        ]
         result = halt(population, 1)
         self.assertFalse(result)
         # Try again
         # two out of two "correct" dissonances
         g1.fitness = MAX_REWARD + (REWARD_STEPWISE_MOTION * 2)
-        population = [g1, ]
+        population = [
+            g1,
+        ]
         result = halt(population, 1)
         self.assertTrue(result)
 

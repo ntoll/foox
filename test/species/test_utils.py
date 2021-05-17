@@ -3,8 +3,12 @@ Tests the common utility functions found in the utils module.
 """
 import unittest
 
-from foox.species.utils import (is_parallel, make_generate_function,
-    is_stepwise_motion, is_suspension)
+from foox.species.utils import (
+    is_parallel,
+    make_generate_function,
+    is_stepwise_motion,
+    is_suspension,
+)
 from foox.ga import Genome
 
 
@@ -150,6 +154,7 @@ class TestGenerateFunction(unittest.TestCase):
         seed_population = [g1, g2, g3]
         result = generate_function(seed_population)
         self.assertTrue(3, len(result))
+
 
 class TestIsSuspension(unittest.TestCase):
     """

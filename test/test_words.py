@@ -3,12 +3,17 @@ Tests for the silly word based example used to demonstrate the machinations of
 genetic algorithms.
 """
 import unittest
-from foox.words import (Genome, create_population,
-    make_fitness_function, make_generate_function, halt)
+from foox.words import (
+    Genome,
+    create_population,
+    make_fitness_function,
+    make_generate_function,
+    halt,
+)
 
 
 # Target word we're attempting to evolve.
-TARGET_WORD = 'foo'
+TARGET_WORD = "foo"
 
 
 class TestCreatePopulation(unittest.TestCase):
@@ -50,7 +55,7 @@ class TestFitnessFunction(unittest.TestCase):
         float.
         """
         fitness_function = make_fitness_function(TARGET_WORD)
-        genome = Genome(['c', 'a', 't'])
+        genome = Genome(["c", "a", "t"])
         result = fitness_function(genome)
         self.assertTrue(float, type(result))
 
@@ -60,7 +65,7 @@ class TestFitnessFunction(unittest.TestCase):
         is the same as the returned fitness score.
         """
         fitness_function = make_fitness_function(TARGET_WORD)
-        genome = Genome(['c', 'a', 't'])
+        genome = Genome(["c", "a", "t"])
         self.assertEqual(None, genome.fitness)
         result = fitness_function(genome)
         self.assertNotEqual(None, genome.fitness)
@@ -72,7 +77,7 @@ class TestFitnessFunction(unittest.TestCase):
         the genome.
         """
         fitness_function = make_fitness_function(TARGET_WORD)
-        genome = Genome(['c', 'a', 't'])
+        genome = Genome(["c", "a", "t"])
         genome.fitness = 12345
         result = fitness_function(genome)
         self.assertEqual(12345, result)
@@ -97,9 +102,9 @@ class TestGenerateFunction(unittest.TestCase):
         Ensures the new population is a list.
         """
         generate_function = make_generate_function(7, 0.2, TARGET_WORD)
-        g1 = Genome(['c', 'a', 't'])
+        g1 = Genome(["c", "a", "t"])
         g1.fitness = 1
-        g2 = Genome(['d', 'o', 'g'])
+        g2 = Genome(["d", "o", "g"])
         g2.fitness = 2
         seed_population = [g1, g2]
         result = generate_function(seed_population)
@@ -110,11 +115,11 @@ class TestGenerateFunction(unittest.TestCase):
         Ensure the new population is the correct length.
         """
         generate_function = make_generate_function(7, 0.2, TARGET_WORD)
-        g1 = Genome(['c', 'a', 't'])
+        g1 = Genome(["c", "a", "t"])
         g1.fitness = 1
-        g2 = Genome(['d', 'o', 'g'])
+        g2 = Genome(["d", "o", "g"])
         g2.fitness = 2
-        g3 = Genome(['f', 'o', 'o'])
+        g3 = Genome(["f", "o", "o"])
         g3.fitness = 3
         seed_population = [g1, g2, g3]
         result = generate_function(seed_population)
@@ -130,11 +135,11 @@ class TestHalt(unittest.TestCase):
         """
         Ensure the function returns true if we're in a halting state.
         """
-        g1 = Genome(['c', 'a', 't'])
+        g1 = Genome(["c", "a", "t"])
         g1.fitness = len(TARGET_WORD)
-        g2 = Genome(['d', 'o', 'g'])
+        g2 = Genome(["d", "o", "g"])
         g2.fitness = 2
-        g3 = Genome(['f', 'o', 'o'])
+        g3 = Genome(["f", "o", "o"])
         g3.fitness = 3
         # Any fittest solution with fitness = length of the target word.
         population = [g1, g2, g3]
@@ -146,11 +151,11 @@ class TestHalt(unittest.TestCase):
         Ensures if the fittest genome has fitness < 4 then halt doesn't
         succeed.
         """
-        g1 = Genome(['c', 'a', 't'])
+        g1 = Genome(["c", "a", "t"])
         g1.fitness = len(TARGET_WORD) - 1
-        g2 = Genome(['d', 'o', 'g'])
+        g2 = Genome(["d", "o", "g"])
         g2.fitness = 2
-        g3 = Genome(['f', 'o', 'o'])
+        g3 = Genome(["f", "o", "o"])
         g3.fitness = 3
         # Any fittest solution with fitness < target word length means call a
         # halt.
@@ -168,6 +173,7 @@ class TestGenome(unittest.TestCase):
         """
         Ensures that we have a mutate method implemented.
         """
-        genome = Genome(['c', 'a', 't'])
-        self.assertNotEqual(NotImplemented, genome.mutate(2, 0.2,
-            ['d', 'o', 'g']))
+        genome = Genome(["c", "a", "t"])
+        self.assertNotEqual(
+            NotImplemented, genome.mutate(2, 0.2, ["d", "o", "g"])
+        )

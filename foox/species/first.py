@@ -4,7 +4,7 @@ This module encapsulates the behaviour of first species counterpoint.
 import random
 
 import foox.ga as ga
-from utils import is_parallel, make_generate_function
+from .utils import is_parallel, make_generate_function
 
 
 # Some sane defaults.
@@ -51,8 +51,13 @@ PUNISH_PARALLEL = 0.1
 PUNISH_LEAPS = 0.1
 
 # The highest score a candidate solution may achieve. (Hack!)
-MAX_REWARD = (REWARD_FIRST + REWARD_LAST + REWARD_LAST_STEP +
-    REWARD_LAST_MOTION + REWARD_PENULTIMATE_PREPARATION)
+MAX_REWARD = (
+    REWARD_FIRST
+    + REWARD_LAST
+    + REWARD_LAST_STEP
+    + REWARD_LAST_MOTION
+    + REWARD_PENULTIMATE_PREPARATION
+)
 
 
 def create_population(number, cantus_firmus):
@@ -64,8 +69,11 @@ def create_population(number, cantus_firmus):
     for i in range(number):
         new_chromosome = []
         for note in cantus_firmus:
-            valid_range = [interval for interval in
-                VALID_INTERVALS if (interval + note) < 17]
+            valid_range = [
+                interval
+                for interval in VALID_INTERVALS
+                if (interval + note) < 17
+            ]
             interval = random.choice(valid_range)
             new_chromosome.append(note + interval)
         genome = Genome(new_chromosome)
@@ -130,8 +138,9 @@ def make_fitness_function(cantus_firmus):
         cantus_firmus_motion = cantus_firmus[-1] - cantus_firmus[-2]
         contrapunctus_motion = contrapunctus[-1] - contrapunctus[-2]
 
-        if ((cantus_firmus_motion < 0 and contrapunctus_motion > 0) or
-            (cantus_firmus_motion > 0 and contrapunctus_motion < 0)):
+        if (cantus_firmus_motion < 0 and contrapunctus_motion > 0) or (
+            cantus_firmus_motion > 0 and contrapunctus_motion < 0
+        ):
             fitness_score += REWARD_LAST_MOTION
         else:
             fitness_score -= PUNISH_LAST_MOTION
@@ -149,7 +158,7 @@ def make_fitness_function(cantus_firmus):
                 fitness_score -= PUNISH_PENULTIMATE_PREPARATION
 
         # Check the fitness of the body of the solution.
-        solution = zip(contrapunctus, cantus_firmus)
+        solution = list(zip(contrapunctus, cantus_firmus))
         last_notes = solution.pop()
         last_interval = last_notes[0] - last_notes[1]
         for contrapunctus_note, cantus_firmus_note in solution[1:]:
@@ -157,8 +166,9 @@ def make_fitness_function(cantus_firmus):
             current_interval = contrapunctus_note - cantus_firmus_note
 
             # Punish parallel fifths or octaves.
-            if ((current_interval == 4 or current_interval == 7) and
-                (last_interval == 4 or last_interval == 7)):
+            if (current_interval == 4 or current_interval == 7) and (
+                last_interval == 4 or last_interval == 7
+            ):
                 fitness_score -= PUNISH_PARALLEL_FIFTHS_OCTAVES
 
             # Check if the melody is a repeating note.
@@ -220,8 +230,10 @@ def halt(population, generation_count):
     """
     # All four required fingerprints exist in a solution that has not been
     # punished by for over-use of thirds, sixths, parallel motion etc.
-    return (population[0].fitness >= MAX_REWARD or
-        generation_count > DEFAULT_MAX_GENERATION)
+    return (
+        population[0].fitness >= MAX_REWARD
+        or generation_count > DEFAULT_MAX_GENERATION
+    )
 
 
 class Genome(ga.Genome):
@@ -235,14 +247,19 @@ class Genome(ga.Genome):
         mutation_rate given and the cantus_firmus passed in as the context (to
         ensure the mutation is valid).
         """
-        valid_mutation_intervals = [interval for interval in VALID_INTERVALS
-            if interval <= mutation_range]
+        valid_mutation_intervals = [
+            interval
+            for interval in VALID_INTERVALS
+            if interval <= mutation_range
+        ]
         for locus in range(len(self.chromosome)):
             if mutation_rate >= random.random():
                 cantus_firmus_note = context[locus]
-                valid_mutation_range = [interval for interval in
-                    valid_mutation_intervals if
-                    (interval + cantus_firmus_note) < 17]
+                valid_mutation_range = [
+                    interval
+                    for interval in valid_mutation_intervals
+                    if (interval + cantus_firmus_note) < 17
+                ]
                 mutation = random.choice(valid_mutation_range)
                 new_allele = cantus_firmus_note + mutation
                 self.chromosome[locus] = new_allele
